@@ -45,6 +45,7 @@ class Entry(Base):
 
 class Trajectory(Base):
     __tablename__ = "trajectories"
+    id = Column(Integer, primary_key=True, autoincrement=True)
     target_body = relationship("Body", back_populates="trajectories")
     architecture = relationship("Architecture")
 
