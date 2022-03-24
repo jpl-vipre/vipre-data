@@ -1,7 +1,10 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean
 from sqlalchemy.orm import declarative_base, relationship
 
-Base = declarative_base()
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
+
+from .database import Base
 
 
 class Entry(Base):
@@ -61,7 +64,7 @@ class Occultation(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
 
     # Relationships
-    entry_id = Column(Integer, primary_key=True, autoincrement=True)
+    entry_id = Column(Integer, ForeignKey("entry.id"))
     entry = relationship("Entry", back_populates="occultations")
 
     # Fields
