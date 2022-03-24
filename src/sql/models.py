@@ -24,18 +24,18 @@ class Entry(Base):
     occultations = relationship("Occultation", back_populates="entry")
 
     # Fields
-    bvec_theta = Column(Float, nullable=False)
-    bvec_mag = Column(Integer, nullable=False)
+    bvec_theta = Column(Float, index=True, nullable=False)
+    bvec_mag = Column(Integer, index=True, nullable=False)
     safe = Column(Boolean, doc="Flag indicating whether trajectory avoids unsafe conditions (ring impact, etc)")
-    t_entry = Column(Float, doc="Time of atmospheric entry in days past J2000")
+    t_entry = Column(Float, index=True, doc="Time of atmospheric entry in days past J2000")
     # entry_trajec = Column(Boolean, nullable=False)
 
-    pos_entry_x = Column(Float, doc="x component of spacecraft position at time of entry [km]")
-    pos_entry_y = Column(Float, doc="y component of spacecraft position at time of entry [km]")
-    pos_entry_z = Column(Float, doc="z component of spacecraft position at time of entry [km]")
-    vel_entry_x = Column(Float, doc="x component of spacecraft relative entry velocity at time of entry [km]")
-    vel_entry_y = Column(Float, doc="y component of spacecraft relative entry velocity at time of entry [km]")
-    vel_entry_z = Column(Float, doc="z component of spacecraft relative entry velocity at time of entry [km]")
+    pos_entry_x = Column(Float, index=True, doc="x component of spacecraft position at time of entry [km]")
+    pos_entry_y = Column(Float, index=True, doc="y component of spacecraft position at time of entry [km]")
+    pos_entry_z = Column(Float, index=True, doc="z component of spacecraft position at time of entry [km]")
+    vel_entry_x = Column(Float, index=True, doc="x component of spacecraft relative entry velocity at time of entry [km]")
+    vel_entry_y = Column(Float, index=True, doc="y component of spacecraft relative entry velocity at time of entry [km]")
+    vel_entry_z = Column(Float, index=True, doc="z component of spacecraft relative entry velocity at time of entry [km]")
 
     pos_sun_entry_x = Column(Float, doc="x component of sun position at time of entry [km]")
     pos_sun_entry_y = Column(Float, doc="y component of sun position at time of entry [km]")
@@ -48,14 +48,14 @@ class Entry(Base):
     pos_target_entry_z = Column(Float, doc="z component of target position at time of entry [km]")
 
     maneuver = Column(String, doc="Type of maneuver performed to separate from entry vehicle.")
-    dv_maneuver = Column(Float, doc="Delta V of separation maneuver [km/s].")
+    dv_maneuver = Column(Float, index=True, doc="Delta V of separation maneuver [km/s].")
     pos_man_x = Column(Float, doc="x component of spacecraft position at time of maneuver [km].")
     pos_man_y = Column(Float, doc="y component of spacecraft position at time of maneuver [km].")
     pos_man_z = Column(Float, doc="z component of spacecraft position at time of maneuver [km].")
     vel_man_x = Column(Float, doc="x component of spacecraft velocity at time of maneuver [km].")
     vel_man_y = Column(Float, doc="y component of spacecraft velocity at time of maneuver [km].")
     vel_man_z = Column(Float, doc="z component of spacecraft velocity at time of maneuver [km].")
-    relay_volume = Column(Float, doc="Total data volume relayable by entry vehicle.")
+    relay_volume = Column(Float, index=True, doc="Total data volume relayable by entry vehicle.")
 
 
 class Occultation(Base):
@@ -111,7 +111,7 @@ class Trajectory(Base):
 
     c3 = Column(Float, index=True, doc="characteristic energy of launch [km^2/s^2]")
     dv_total = Column(Float, index=True, doc="total DeltaV required for interplanetary trajectory [km/s]")
-    arrival_mass = Column(Float)  # TODO: Is this being removed?
+    arrival_mass = Column(Float, index=True, doc="Dry mass deliverable by interplanetary trajectory [kg]")  # TODO: Is this being removed?
 
 
 class Body(Base):
@@ -123,7 +123,7 @@ class Body(Base):
     trajectories = relationship("Trajectory", back_populates="target_body")
 
     # Fields
-    name = Column(String)
+    name = Column(String, index=True)
     radius = Column(Float, doc="mean radius of body (km)")
     mu = Column(Float, doc="gravity parameter [km^3/s^2]")
     period = Column(Float, doc="body rotational period [days]")
@@ -141,7 +141,7 @@ class Flyby(Base):
     trajectory_id = Column(Integer, ForeignKey("trajectory.id"))
     trajectory = relationship("Trajectory", back_populates="flybys")
 
-    body_id = Column(Integer, ForeignKey("body.id"))
+    body_id = Column(Integer, ForeignKey("body.id"), index=True)
     flyby_body = relationship("Body")
 
     # Fields
@@ -167,4 +167,4 @@ class Architecture(Base):
     # Relationships
 
     # Fields
-    sequence = Column(String, doc="SQL body IDs of the flybys in order")
+    sequence = Column(String, index=True, doc="SQL body IDs of the flybys in order")
