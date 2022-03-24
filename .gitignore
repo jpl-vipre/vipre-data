@@ -1,5 +1,6 @@
 data.zip
 data/*
 notebooks/scratch/*
+*.db
 
 !.gitkeep
