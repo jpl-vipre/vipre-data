@@ -4,7 +4,7 @@ from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from .database import Base
+from sql.database import Base
 
 
 class Entry(Base):
@@ -22,6 +22,7 @@ class Entry(Base):
     trajectory = relationship("Trajectory", back_populates="entries")
 
     occultations = relationship("Occultation", back_populates="entry")
+    maneuvers = relationship("Maneuver", back_populates="entry")
 
     # Fields
     bvec_theta = Column(Float, index=True, nullable=False)
@@ -47,7 +48,20 @@ class Entry(Base):
     pos_target_entry_y = Column(Float, doc="y component of target position at time of entry [km]")
     pos_target_entry_z = Column(Float, doc="z component of target position at time of entry [km]")
 
-    maneuver = Column(String, doc="Type of maneuver performed to separate from entry vehicle.")
+    relay_volume = Column(Float, index=True, doc="Total data volume relayable by entry vehicle.")
+
+
+class Maneuver(Base):
+    # Identity
+    __tablename__ = "maneuver"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    # Relationships
+    entry_id = Column(Integer, ForeignKey("entry.id"))
+    entry = relationship("Entry", back_populates="maneuvers")
+
+    # Fields
+    maneuver_type = Column(String, doc="Type of maneuver performed to separate from entry vehicle.")
     dv_maneuver = Column(Float, index=True, doc="Delta V of separation maneuver [km/s].")
     pos_man_x = Column(Float, doc="x component of spacecraft position at time of maneuver [km].")
     pos_man_y = Column(Float, doc="y component of spacecraft position at time of maneuver [km].")
@@ -55,7 +69,6 @@ class Entry(Base):
     vel_man_x = Column(Float, doc="x component of spacecraft velocity at time of maneuver [km].")
     vel_man_y = Column(Float, doc="y component of spacecraft velocity at time of maneuver [km].")
     vel_man_z = Column(Float, doc="z component of spacecraft velocity at time of maneuver [km].")
-    relay_volume = Column(Float, index=True, doc="Total data volume relayable by entry vehicle.")
 
 
 class Occultation(Base):
@@ -70,6 +83,7 @@ class Occultation(Base):
     # Fields
     t_occ_n = Column(Float, doc="Time that spacecraft enters into occultation relative to the Earth in days past J2000.")
     t_occ_out = Column(Float, doc="Time that spacecraft exits occultation relative to the Earth in days past J2000.")
+
 
 class Trajectory(Base):
     # Identity
