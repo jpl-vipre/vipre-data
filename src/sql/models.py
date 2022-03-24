@@ -125,7 +125,7 @@ class Trajectory(Base):
 
     c3 = Column(Float, index=True, doc="characteristic energy of launch [km^2/s^2]")
     dv_total = Column(Float, index=True, doc="total DeltaV required for interplanetary trajectory [km/s]")
-    arrival_mass = Column(Float, index=True, doc="Dry mass deliverable by interplanetary trajectory [kg]")  # TODO: Is this being removed?
+    arrival_mass = Column(Float, index=True, doc="Dry mass deliverable by interplanetary trajectory [kg]")
 
 
 class Body(Base):
