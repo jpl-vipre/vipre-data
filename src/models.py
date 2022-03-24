@@ -18,39 +18,55 @@ class Entry(Base):
     trajectory_id = Column(Integer, ForeignKey("trajectory.id"))
     trajectory = relationship("Trajectory", back_populates="entries")
 
+    occultations = relationship("Occultation", back_populates="entry")
+
     # Fields
     bvec_theta = Column(Float, nullable=False)
-    bvec_abs = Column(Integer, nullable=False)
-    entry_trajec = Column(Boolean, nullable=False)
+    bvec_mag = Column(Integer, nullable=False)
+    safe = Column(Boolean, doc="Flag indicating whether trajectory avoids unsafe conditions (ring impact, etc)")
+    t_entry = Column(Float, doc="Time of atmospheric entry in days past J2000")
+    # entry_trajec = Column(Boolean, nullable=False)
 
-    state_eq_rx = Column(Float)
-    state_eq_ry = Column(Float)
-    state_eq_rz = Column(Float)
-    state_eq_vx = Column(Float)
-    state_eq_vy = Column(Float)
-    state_eq_vz = Column(Float)
+    pos_entry_x = Column(Float, doc="x component of spacecraft position at time of entry [km]")
+    pos_entry_y = Column(Float, doc="y component of spacecraft position at time of entry [km]")
+    pos_entry_z = Column(Float, doc="z component of spacecraft position at time of entry [km]")
+    vel_entry_x = Column(Float, doc="x component of spacecraft relative entry velocity at time of entry [km]")
+    vel_entry_y = Column(Float, doc="y component of spacecraft relative entry velocity at time of entry [km]")
+    vel_entry_z = Column(Float, doc="z component of spacecraft relative entry velocity at time of entry [km]")
 
-    safe = Column(Boolean, nullable=False)
-    entry_state_rx = Column(Float, nullable=False)
-    entry_state_ry = Column(Float, nullable=False)
-    entry_state_rz = Column(Float, nullable=False)
-    entry_state_vx = Column(Float, nullable=False)
-    entry_state_vy = Column(Float, nullable=False)
-    entry_state_vz = Column(Float, nullable=False)
+    pos_sun_entry_x = Column(Float, doc="x component of sun position at time of entry [km]")
+    pos_sun_entry_y = Column(Float, doc="y component of sun position at time of entry [km]")
+    pos_sun_entry_z = Column(Float, doc="z component of sun position at time of entry [km]")
+    pos_sc_entry_x = Column(Float, doc="x component of spacecraft position at time of entry [km]")
+    pos_sc_entry_y = Column(Float, doc="y component of spacecraft position at time of entry [km]")
+    pos_sc_entry_z = Column(Float, doc="z component of spacecraft position at time of entry [km]")
+    pos_target_entry_x = Column(Float, doc="x component of target position at time of entry [km]")
+    pos_target_entry_y = Column(Float, doc="y component of target position at time of entry [km]")
+    pos_target_entry_z = Column(Float, doc="z component of target position at time of entry [km]")
 
-    lon_entry = Column(Float)
-    lat_entry = Column(Float)
+    maneuver = Column(String, doc="Type of maneuver performed to separate from entry vehicle.")
+    dv_maneuver = Column(Float, doc="Delta V of separation maneuver [km/s].")
+    pos_man_x = Column(Float, doc="x component of spacecraft position at time of maneuver [km].")
+    pos_man_y = Column(Float, doc="y component of spacecraft position at time of maneuver [km].")
+    pos_man_z = Column(Float, doc="z component of spacecraft position at time of maneuver [km].")
+    vel_man_x = Column(Float, doc="x component of spacecraft velocity at time of maneuver [km].")
+    vel_man_y = Column(Float, doc="y component of spacecraft velocity at time of maneuver [km].")
+    vel_man_z = Column(Float, doc="z component of spacecraft velocity at time of maneuver [km].")
+    relay_volume = Column(Float, doc="Total data volume relayable by entry vehicle.")
 
-    v_rot_x = Column(Float)
-    v_rot_y = Column(Float)
-    v_rot_z = Column(Float)
 
-    fpa = Column(Float)
+class Occultation(Base):
+    # Identity
+    __tablename__ = "occultation"
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
-    v_rel_entry_x = Column(Float)
-    v_rel_entry_y = Column(Float)
-    v_rel_entry_z = Column(Float)
+    # Relationships
+    entry_id = Column(Integer, primary_key=True, autoincrement=True)
+    entry = relationship("Entry", back_populates="occultations")
 
+    # Fields
+    t_occ_n = Column(Float, doc="Time that spacecraft enters into occultation relative to the Earth in days past J2000.")
+    t_occ_out = Column(Float, doc="Time that spacecraft exits occultation relative to the Earth in days past J2000.")
 
 class Trajectory(Base):
     # Identity
@@ -126,8 +142,16 @@ class Flyby(Base):
     flyby_body = relationship("Body")
 
     # Fields
-    days = Column(Float)
+    altitude = Column(Float, doc="Altitude above flyby body surface at flyby hyperbola periapsis [km]")
+    days = Column(Float, doc="Time of flyby in days past J2000")
     order = Column(Integer)
+
+    v_inf_in_x = Column(Float, doc="x component of incoming flyby v_inifinity [km/s]")
+    v_inf_in_y = Column(Float, doc="y component of incoming flyby v_inifinity [km/s]")
+    v_inf_in_z = Column(Float, doc="z component of incoming flyby v_inifinity [km/s]")
+    v_inf_out_x = Column(Float, doc="x component of incoming flyby v_inifinity [km/s]")
+    v_inf_out_y = Column(Float, doc="y component of incoming flyby v_inifinity [km/s]")
+    v_inf_out_z = Column(Float, doc="z component of incoming flyby v_inifinity [km/s]")
 
     # constrain unique(trajectory_id + order)
 
@@ -140,4 +164,4 @@ class Architecture(Base):
     # Relationships
 
     # Fields
-    sequence = Column(String)
+    sequence = Column(String, doc="SQL body IDs of the flybys in order")
