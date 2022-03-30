@@ -1,7 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean
-from sqlalchemy.orm import declarative_base, relationship
-
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float
 from sqlalchemy.orm import relationship
 
 from sql.database import Base
@@ -41,14 +38,14 @@ class Entry(Base):
     pos_sun_entry_x = Column(Float, doc="x component of sun position at time of entry [km]")
     pos_sun_entry_y = Column(Float, doc="y component of sun position at time of entry [km]")
     pos_sun_entry_z = Column(Float, doc="z component of sun position at time of entry [km]")
-    pos_sc_entry_x = Column(Float, doc="x component of spacecraft position at time of entry [km]")
-    pos_sc_entry_y = Column(Float, doc="y component of spacecraft position at time of entry [km]")
-    pos_sc_entry_z = Column(Float, doc="z component of spacecraft position at time of entry [km]")
+    pos_earth_entry_x = Column(Float, doc="x component of spacecraft position at time of entry [km]")
+    pos_earth_entry_y = Column(Float, doc="y component of spacecraft position at time of entry [km]")
+    pos_earth_entry_z = Column(Float, doc="z component of spacecraft position at time of entry [km]")
     pos_target_entry_x = Column(Float, doc="x component of target position at time of entry [km]")
     pos_target_entry_y = Column(Float, doc="y component of target position at time of entry [km]")
     pos_target_entry_z = Column(Float, doc="z component of target position at time of entry [km]")
 
-    relay_volume = Column(Float, index=True, doc="Total data volume relayable by entry vehicle.")
+    relay_volume = Column(Float, index=True, nullable=True, doc="Total data volume relayable by entry vehicle.")
 
 
 class Maneuver(Base):
@@ -99,33 +96,31 @@ class Trajectory(Base):
 
     entries = relationship("Entry", back_populates="trajectory")
 
+    flybys = relationship("Flyby", back_populates="trajectory")
+
     # Fields
     t_launch = Column(Float, index=True, doc="time of launch in days past J2000")
     t_arr = Column(Float, index=True, doc="time of target arrival in days past J2000")
+    m_arr = Column(Float, index=True, doc="Dry mass deliverable by interplanetary trajectory [kg]")
 
     v_inf_arr_x = Column(Float, index=True, doc="x component of interplanetary arrival velocity at target [km/s]")
     v_inf_arr_y = Column(Float, index=True, doc="x component of interplanetary arrival velocity at target [km/s]")
     v_inf_arr_z = Column(Float, index=True, doc="x component of interplanetary arrival velocity at target [km/s]")
 
-    pos_sun_x = Column(Float, doc="x component of sun position at time of arrival [km]")
-    pos_sun_y = Column(Float, doc="y component of sun position at time of arrival [km]")
-    pos_sun_z = Column(Float, doc="z component of sun position at time of arrival [km]")
-
-    pos_earth_x = Column(Float, doc="x component of earth position at time of arrival [km]")
-    pos_earth_y = Column(Float, doc="y component of earth position at time of arrival [km]")
-    pos_earth_z = Column(Float, doc="z component of earth position at time of arrival [km]")
-
-    pos_target_x = Column(Float, doc="x component of target position at time of arrival [km]")
-    pos_target_y = Column(Float, doc="y component of target position at time of arrival [km]")
-    pos_target_z = Column(Float, doc="z component of target position at time of arrival [km]")
-
-    pos_sc_x = Column(Float, doc="x component of spacecraft position at time of arrival [km]")
-    pos_sc_y = Column(Float, doc="y component of spacecraft position at time of arrival [km]")
-    pos_sc_z = Column(Float, doc="z component of spacecraft position at time of arrival [km]")
-
     c3 = Column(Float, index=True, doc="characteristic energy of launch [km^2/s^2]")
     dv_total = Column(Float, index=True, doc="total DeltaV required for interplanetary trajectory [km/s]")
-    arrival_mass = Column(Float, index=True, doc="Dry mass deliverable by interplanetary trajectory [kg]")
+
+    pos_sun_arr_x = Column(Float, doc="x component of sun position at time of arrival [km]")
+    pos_sun_arr_y = Column(Float, doc="y component of sun position at time of arrival [km]")
+    pos_sun_arr_z = Column(Float, doc="z component of sun position at time of arrival [km]")
+
+    pos_sc_arr_x = Column(Float, doc="x component of spacecraft position at time of arrival [km]")
+    pos_sc_arr_y = Column(Float, doc="y component of spacecraft position at time of arrival [km]")
+    pos_sc_arr_z = Column(Float, doc="z component of spacecraft position at time of arrival [km]")
+
+    pos_target_arr_x = Column(Float, doc="x component of target position at time of arrival [km]")
+    pos_target_arr_y = Column(Float, doc="y component of target position at time of arrival [km]")
+    pos_target_arr_z = Column(Float, doc="z component of target position at time of arrival [km]")
 
 
 class Body(Base):
@@ -159,9 +154,9 @@ class Flyby(Base):
     flyby_body = relationship("Body")
 
     # Fields
-    altitude = Column(Float, doc="Altitude above flyby body surface at flyby hyperbola periapsis [km]")
-    days = Column(Float, doc="Time of flyby in days past J2000")
     order = Column(Integer)
+    t_flyby = Column(Float, doc="Time of flyby in days past J2000")
+    altitude = Column(Float, doc="Altitude above flyby body surface at flyby hyperbola periapsis [km]")
 
     v_inf_in_x = Column(Float, doc="x component of incoming flyby v_inifinity [km/s]")
     v_inf_in_y = Column(Float, doc="y component of incoming flyby v_inifinity [km/s]")
