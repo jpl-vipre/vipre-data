@@ -1,7 +1,17 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, inspect, exc
 from sqlalchemy.orm import relationship
 
 from sql.database import Base
+
+
+def get_column_names(model: Base) -> list[str]:
+    mapper = inspect(model)
+    try:
+        columns = mapper.columns
+        return [c.name for c in columns]
+    except exc.NoInspectionAvailable:
+        # TODO: log failure
+        return []
 
 
 class Entry(Base):
