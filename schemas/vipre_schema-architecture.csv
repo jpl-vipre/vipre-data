@@ -1,0 +1,3 @@
+Field name,Short Name,Datatype (range),Example Value,Filtering Needs,Back End Computable,Description
+id,Architecture ID,int(0-1000),6,checkbox (optional),n/a,SQL architecture ID indicating the grouping trajectories based on flyby bodies and their order in the interplanetary trajectory
+sequence,Flyby Sequence,varchar(255),"""599-599-699""","checkbox (optional, unlikely to be needed)",no,SQL body IDs of the flybys in order

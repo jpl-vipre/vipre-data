@@ -1,0 +1,186 @@
+{
+  "tablename": "trajectory",
+  "note": "TODO",
+  "fields": [
+    {
+      "Field name": "id",
+      "Short Name": "Trajectory ID",
+      "Datatype (range)": "Sequence",
+      "Example Value": "4",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "SQL trajectory ID"
+    },
+    {
+      "Field name": "body_id",
+      "Short Name": "Body ID (target)",
+      "Datatype (range)": "int(0-1000)",
+      "Example Value": "599",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "SQL body ID"
+    },
+    {
+      "Field name": "architecture_id",
+      "Short Name": "Architecture ID",
+      "Datatype (range)": "int(0-1000)",
+      "Example Value": "3",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "SQL architecture ID"
+    },
+    {
+      "Field name": "t_launch",
+      "Short Name": "Launch date",
+      "Datatype (range)": "real(0-36500.000)",
+      "Example Value": "10158.751",
+      "Filtering Needs": "slider (default)",
+      "Back End Computable": "no",
+      "Description": "Time of launch in days past J2000"
+    },
+    {
+      "Field name": "t_arr",
+      "Short Name": "Arrival date",
+      "Datatype (range)": "real(0-36500.000)",
+      "Example Value": "10611.823",
+      "Filtering Needs": "slider (default)",
+      "Back End Computable": "no",
+      "Description": "Time of target arrival in days past J2000"
+    },
+    {
+      "Field name": "m_arr",
+      "Short Name": "Arrival mass",
+      "Datatype (range)": "real(0-10000.00)",
+      "Example Value": "2038.33",
+      "Filtering Needs": "slider (default)",
+      "Back End Computable": "no",
+      "Description": "Dry mass deliverable by interplanetary trajectory [kg]"
+    },
+    {
+      "Field name": "v_inf_arr_x",
+      "Short Name": "Arrival V infinity Vector X",
+      "Datatype (range)": "real(-100 - 100.000000)",
+      "Example Value": "20.971509",
+      "Filtering Needs": "slider on magnitude of v infinity arrival (optional)",
+      "Back End Computable": "no",
+      "Description": "x component of interplanetary arrival velocity at target [km/s]"
+    },
+    {
+      "Field name": "v_inf_arr_y",
+      "Short Name": "Arrival V infinity Vector Y",
+      "Datatype (range)": "real(-100 - 100.000000)",
+      "Example Value": "10.656459",
+      "Filtering Needs": "^",
+      "Back End Computable": "no",
+      "Description": "y component of interplanetary arrival velocity at target [km/s]"
+    },
+    {
+      "Field name": "v_inf_arr_z",
+      "Short Name": "Arrival V infinity Vector Z",
+      "Datatype (range)": "real(-100 - 100.000000)",
+      "Example Value": "-0.652681",
+      "Filtering Needs": "^",
+      "Back End Computable": "no",
+      "Description": "z component of interplanetary arrival velocity at target [km/s]"
+    },
+    {
+      "Field name": "c3",
+      "Short Name": "Launch C3",
+      "Datatype (range)": "real (0-500.000000)",
+      "Example Value": "10.584471",
+      "Filtering Needs": "slider (default)",
+      "Back End Computable": "no",
+      "Description": "Characteristic energy of launch [km^2/s^2]"
+    },
+    {
+      "Field name": "dv_total",
+      "Short Name": "Total Cruise DeltaV",
+      "Datatype (range)": "real (0-100.000000)",
+      "Example Value": "2.8846701",
+      "Filtering Needs": "slider (default)",
+      "Back End Computable": "no",
+      "Description": "total DeltaV required for interplanetary trajectory [km/s]"
+    },
+    {
+      "Field name": "pos_sun_arr_x",
+      "Short Name": "Sun Position @ Arrival X",
+      "Datatype (range)": "real(0-10000000000.000)",
+      "Example Value": "3903113883",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "x component of sun position at time of arrival [km]"
+    },
+    {
+      "Field name": "pos_sun_arr_y",
+      "Short Name": "Sun Position @ Arrival Y",
+      "Datatype (range)": "real(0-10000000000.000)",
+      "Example Value": "2155580575",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "y component of sun position at time of arrival [km]"
+    },
+    {
+      "Field name": "pos_sun_arr_z",
+      "Short Name": "Sun Position @ Arrival Z",
+      "Datatype (range)": "real(0-10000000000.000)",
+      "Example Value": "-134323986",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "z component of sun position at time of arrival [km]"
+    },
+    {
+      "Field name": "pos_sc_arr_x",
+      "Short Name": "Spacecraft Position @ Arrival X",
+      "Datatype (range)": "real(0-10000000000.000)",
+      "Example Value": "3903113883",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "x component of spacecraft position at time of arrival [km]"
+    },
+    {
+      "Field name": "pos_sc_arr_y",
+      "Short Name": "Spacecraft Position @ Arrival Y",
+      "Datatype (range)": "real(0-10000000000.000)",
+      "Example Value": "2155580575",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "y component of spacecraft position at time of arrival [km]"
+    },
+    {
+      "Field name": "pos_sc_arr_z",
+      "Short Name": "Spacecraft Position @ Arrival Z",
+      "Datatype (range)": "real(0-10000000000.000)",
+      "Example Value": "-134323986",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "z component of spacecraft position at time of arrival [km]"
+    },
+    {
+      "Field name": "pos_target_arr_x",
+      "Short Name": "Target Position @ Arrival X",
+      "Datatype (range)": "real(0-10000000000.000)",
+      "Example Value": "3903113883",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "x component of target position at time of arrival [km]"
+    },
+    {
+      "Field name": "pos_target_arr_y",
+      "Short Name": "Target Position @ Arrival Y",
+      "Datatype (range)": "real(0-10000000000.000)",
+      "Example Value": "2155580575",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "y component of target position at time of arrival [km]"
+    },
+    {
+      "Field name": "pos_target_arr_z",
+      "Short Name": "Target Position @ Arrival Z",
+      "Datatype (range)": "real(0-10000000000.000)",
+      "Example Value": "-134323986",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "z component of target position at time of arrival [km]"
+    }
+  ]
+}

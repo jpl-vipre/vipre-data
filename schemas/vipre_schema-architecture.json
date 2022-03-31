@@ -1,0 +1,24 @@
+{
+  "tablename": "architecture",
+  "note": "TODO",
+  "fields": [
+    {
+      "Field name": "id",
+      "Short Name": "Architecture ID",
+      "Datatype (range)": "int(0-1000)",
+      "Example Value": "6",
+      "Filtering Needs": "checkbox (optional)",
+      "Back End Computable": "n/a",
+      "Description": "SQL architecture ID indicating the grouping trajectories based on flyby bodies and their order in the interplanetary trajectory"
+    },
+    {
+      "Field name": "sequence",
+      "Short Name": "Flyby Sequence",
+      "Datatype (range)": "varchar(255)",
+      "Example Value": "\"599-599-699\"",
+      "Filtering Needs": "checkbox (optional, unlikely to be needed)",
+      "Back End Computable": "no",
+      "Description": "SQL body IDs of the flybys in order"
+    }
+  ]
+}

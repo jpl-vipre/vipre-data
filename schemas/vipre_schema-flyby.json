@@ -1,0 +1,114 @@
+{
+  "tablename": "flyby",
+  "note": "TODO",
+  "fields": [
+    {
+      "Field name": "id",
+      "Short Name": "Flyby ID",
+      "Datatype (range)": "Sequence",
+      "Example Value": "",
+      "Filtering Needs": "",
+      "Back End Computable": "",
+      "Description": ""
+    },
+    {
+      "Field name": "trajectory_id",
+      "Short Name": "Trajectory ID",
+      "Datatype (range)": "int(0-100000)",
+      "Example Value": "4",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "SQL trajectory ID"
+    },
+    {
+      "Field name": "body_id",
+      "Short Name": "Body ID (first flyby)",
+      "Datatype (range)": "int(0-1000)",
+      "Example Value": "599",
+      "Filtering Needs": "checkbox (optional, unlikely to be needed)",
+      "Back End Computable": "no",
+      "Description": "SQL body ID of first flyby body"
+    },
+    {
+      "Field name": "order",
+      "Short Name": "Flyby Order",
+      "Datatype (range)": "int(0-100)",
+      "Example Value": "1",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "no",
+      "Description": "Order of this flyby in trajectory's flyby sequence"
+    },
+    {
+      "Field name": "t_flyby",
+      "Short Name": "Flyby date",
+      "Datatype (range)": "real(0-36500.000)",
+      "Example Value": "10611.823",
+      "Filtering Needs": "slider (optional, unlikely to be needed)",
+      "Back End Computable": "no",
+      "Description": "Time of flyby in days past J2000"
+    },
+    {
+      "Field name": "altitude",
+      "Short Name": "Flyby altitude",
+      "Datatype (range)": "real(0-10000000000.000)",
+      "Example Value": "349000.000",
+      "Filtering Needs": "slider (optional, unlikely to be needed)",
+      "Back End Computable": "no",
+      "Description": "Altitude above flyby body surface at flyby hyperbola periapsis [km]"
+    },
+    {
+      "Field name": "v_inf_in_x",
+      "Short Name": "Incoming V infinity Vector X",
+      "Datatype (range)": "real(-100 - 100.000000)",
+      "Example Value": "20.971509",
+      "Filtering Needs": "slider (optional, unlikely to be needed)",
+      "Back End Computable": "no",
+      "Description": "x component of incoming flyby v_inifinity [km/s]"
+    },
+    {
+      "Field name": "v_inf_in_y",
+      "Short Name": "Incoming V infinity Vector X",
+      "Datatype (range)": "real(-100 - 100.000000)",
+      "Example Value": "20.971509",
+      "Filtering Needs": "slider (optional, unlikely to be needed)",
+      "Back End Computable": "no",
+      "Description": "y component of incoming flyby v_inifinity [km/s]"
+    },
+    {
+      "Field name": "v_inf_in_z",
+      "Short Name": "Incoming V infinity Vector X",
+      "Datatype (range)": "real(-100 - 100.000000)",
+      "Example Value": "20.971509",
+      "Filtering Needs": "slider (optional, unlikely to be needed)",
+      "Back End Computable": "no",
+      "Description": "z component of incoming flyby v_inifinity [km/s]"
+    },
+    {
+      "Field name": "v_inf_out_x",
+      "Short Name": "Outgoing V infinity Vector X",
+      "Datatype (range)": "real(-100 - 100.000000)",
+      "Example Value": "20.971509",
+      "Filtering Needs": "slider (optional, unlikely to be needed)",
+      "Back End Computable": "no",
+      "Description": "x component of outgoing flyby v_inifinity [km/s]"
+    },
+    {
+      "Field name": "v_inf_out_y",
+      "Short Name": "Outgoing V infinity Vector X",
+      "Datatype (range)": "real(-100 - 100.000000)",
+      "Example Value": "20.971509",
+      "Filtering Needs": "slider (optional, unlikely to be needed)",
+      "Back End Computable": "no",
+      "Description": "y component of outgoing flyby v_inifinity [km/s]"
+    },
+    {
+      "Field name": "v_inf_out_z",
+      "Short Name": "Outgoing V infinity Vector X",
+      "Datatype (range)": "real(-100 - 100.000000)",
+      "Example Value": "20.971509",
+      "Filtering Needs": "slider (optional, unlikely to be needed)",
+      "Back End Computable": "no",
+      "Description": "z component of outgoing flyby v_inifinity [km/s]"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+Field name,Short Name,Datatype (range),Example Value,Filtering Needs,Back End Computable,Description
+id,Trajectory ID,Sequence,4,n/a,no,SQL trajectory ID
+body_id,Body ID (target),int(0-1000),599,n/a,no,SQL body ID
+architecture_id,Architecture ID,int(0-1000),3,n/a,no,SQL architecture ID
+t_launch,Launch date,real(0-36500.000),10158.751,slider (default),no,Time of launch in days past J2000
+t_arr,Arrival date,real(0-36500.000),10611.823,slider (default),no,Time of target arrival in days past J2000
+m_arr,Arrival mass,real(0-10000.00),2038.33,slider (default),no,Dry mass deliverable by interplanetary trajectory [kg]
+v_inf_arr_x,Arrival V infinity Vector X,real(-100 - 100.000000),20.971509,slider on magnitude of v infinity arrival (optional),no,x component of interplanetary arrival velocity at target [km/s]
+v_inf_arr_y,Arrival V infinity Vector Y,real(-100 - 100.000000),10.656459,^,no,y component of interplanetary arrival velocity at target [km/s]
+v_inf_arr_z,Arrival V infinity Vector Z,real(-100 - 100.000000),-0.652681,^,no,z component of interplanetary arrival velocity at target [km/s]
+c3,Launch C3,real (0-500.000000),10.584471,slider (default),no,Characteristic energy of launch [km^2/s^2]
+dv_total,Total Cruise DeltaV,real (0-100.000000),2.8846701,slider (default),no,total DeltaV required for interplanetary trajectory [km/s]
+pos_sun_arr_x,Sun Position @ Arrival X,real(0-10000000000.000),3903113883,n/a,no,x component of sun position at time of arrival [km]
+pos_sun_arr_y,Sun Position @ Arrival Y,real(0-10000000000.000),2155580575,n/a,no,y component of sun position at time of arrival [km]
+pos_sun_arr_z,Sun Position @ Arrival Z,real(0-10000000000.000),-134323986,n/a,no,z component of sun position at time of arrival [km]
+pos_sc_arr_x,Spacecraft Position @ Arrival X,real(0-10000000000.000),3903113883,n/a,no,x component of spacecraft position at time of arrival [km]
+pos_sc_arr_y,Spacecraft Position @ Arrival Y,real(0-10000000000.000),2155580575,n/a,no,y component of spacecraft position at time of arrival [km]
+pos_sc_arr_z,Spacecraft Position @ Arrival Z,real(0-10000000000.000),-134323986,n/a,no,z component of spacecraft position at time of arrival [km]
+pos_target_arr_x,Target Position @ Arrival X,real(0-10000000000.000),3903113883,n/a,no,x component of target position at time of arrival [km]
+pos_target_arr_y,Target Position @ Arrival Y,real(0-10000000000.000),2155580575,n/a,no,y component of target position at time of arrival [km]
+pos_target_arr_z,Target Position @ Arrival Z,real(0-10000000000.000),-134323986,n/a,no,z component of target position at time of arrival [km]

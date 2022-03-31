@@ -1,0 +1,78 @@
+{
+  "tablename": "body",
+  "note": "TODO",
+  "fields": [
+    {
+      "Field name": "id",
+      "Short Name": "Body ID",
+      "Datatype (range)": "int(0-1000)",
+      "Example Value": "599",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "n",
+      "Description": "SQL body ID. Plan to use Horizons ID as this value to save space"
+    },
+    {
+      "Field name": "name",
+      "Short Name": "Name",
+      "Datatype (range)": "text",
+      "Example Value": "Jupiter",
+      "Filtering Needs": "checkbox (target - default, flyby - optional)",
+      "Back End Computable": "n",
+      "Description": "name of body"
+    },
+    {
+      "Field name": "radius",
+      "Short Name": "Radius",
+      "Datatype (range)": "real (0-695700.000)",
+      "Example Value": "6378.1366",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "n",
+      "Description": "mean radius of body [km]"
+    },
+    {
+      "Field name": "mu",
+      "Short Name": "Gravity parameter",
+      "Datatype (range)": "real (0-1.32710000e11)",
+      "Example Value": "126686531.9",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "n",
+      "Description": "gravity parameter [km^3/s^2]"
+    },
+    {
+      "Field name": "period",
+      "Short Name": "Rotation period",
+      "Datatype (range)": "real (0-243.00)",
+      "Example Value": "1.02595676",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "n",
+      "Description": "body rotational period [days]"
+    },
+    {
+      "Field name": "pole_vec_x",
+      "Short Name": "Pole vector X",
+      "Datatype (range)": "real (-1 - 1.000)",
+      "Example Value": "0.1224",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "n",
+      "Description": "x component of body spin pole unit vector represented in EMO2000 frame"
+    },
+    {
+      "Field name": "pole_vec_y",
+      "Short Name": "Pole vector Y",
+      "Datatype (range)": "real (-1 - 1.000)",
+      "Example Value": "-0.0310",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "n",
+      "Description": "y component of body spin pole unit vector represented in EMO2000 frame"
+    },
+    {
+      "Field name": "pole_vec_z",
+      "Short Name": "Pole vector Z",
+      "Datatype (range)": "real (-1 - 1.000)",
+      "Example Value": "0.9920",
+      "Filtering Needs": "n/a",
+      "Back End Computable": "n",
+      "Description": "z component of body spin pole unit vector represented in EMO2000 frame"
+    }
+  ]
+}
