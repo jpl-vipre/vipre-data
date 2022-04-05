@@ -1,5 +1,0 @@
-Field name,Short Name,Datatype (range),Example Value,Filtering Needs,Back End Computable,Description
-id,Occultation ID,int(0-1000000),1,n/a,n/a,SQL ID of the occultation
-entry_id,Entry ID,int(0-1000000),1,n/a,n/a,SQL ID of the entry
-t_occ_n,Entry time for first occultation,real(0-36500.000),10611.823,"checkbox (optional, not clear how this would be implemented",no,Time that spacecraft enters into occultation relative to the Earth in days past J2000. Nullable
-t_occ_out,Exit time for first occultation,real(0-36500.000),10611.823,"checkbox (optional, not clear how this would be implemented",no,Time that spacecraft exits occultation relative to the Earth in days past J2000. Nullable

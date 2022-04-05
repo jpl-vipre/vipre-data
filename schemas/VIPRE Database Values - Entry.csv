@@ -1,0 +1,26 @@
+notes,Set of entry conditions for each entry option from a given trajectory. All values provided in body fixed frame,,,,,,,
+,,,,,,,,
+field_name,key,short_name,datatype_range,sql_datatype,example_value,filtering,computable,description
+id,PK,Entry ID,int(0-100000),INTEGER,1,n/a,n/a,ID of the Entry row in the database
+body_id,FK,Body ID,int(0-100000),INTEGER,599,n/a,n/a,ID of the parent Body in the database
+trajectory_id,FK,Trajectory ID,int(0-100000),INTEGER,4,n/a,no,ID of the parent Trajectory in the database
+bvec_theta,,B-Plane vector angle,real(0-2pi),REAL,3.456,slider (optional),yes,Angle on B-plane  for target arrival [rad]
+bvec_mag,,B-Plane vector magnitude,real(0-10000000000.000),REAL,9750.123,slider (optional),yes,Radial distance from body origin for target arrival [km]
+safe,,Safe Entry Trajectory Flag,int(0-1),INTEGER,1,default exclude,no,"Flag indicating whether trajectory avoids unsafe conditions (ring impact, etc)"
+t_entry,,Time of Entry,real(0-36500.000),REAL,10611.823,slider (optional),no,Time of atmospheric entry in days past J2000
+pos_entry_x,,Spacecraft Position @ entry X,real(0-10000000000.000),REAL,3903113883,"slider (optional, may want to translate to lat/lon)",no,x component of spacecraft position at time of entry [km]
+pos_entry_y,,Spacecraft Position @ entry Y,real(0-10000000000.000),REAL,2155580575,"slider (optional, may want to translate to lat/lon)",no,y component of spacecraft position at time of entry [km]
+pos_entry_z,,Spacecraft Position @ entry Z,real(0-10000000000.000),REAL,-134323986,"slider (optional, may want to translate to lat/lon)",no,z component of spacecraft position at time of entry [km]
+vel_entry_x,,Spacecraft Velocity @ entry X,real(-100 - 100.000000),REAL,20.971509,"slider (optional, may want to translate to angles and magnitude)",no,x component of spacecraft relative entry velocity at time of entry [km]
+vel_entry_y,,Spacecraft Velocity @ entry Y,real(-100 - 100.000000),REAL,10.656459,"slider (optional, may want to translate to angles and magnitude)",no,y component of spacecraft relative entry velocity  at time of entry [km]
+vel_entry_z,,Spacecraft Velocity @ entry Y,real(-100 - 100.000000),REAL,-0.652681,"slider (optional, may want to translate to angles and magnitude)",no,z component of spacecraft relative entry velocity at time of entry [km]
+pos_sun_entry_x,,Sun Position @ entry X,real(0-10000000000.000),REAL,3903113883,n/a,no,x component of sun position at time of entry [km]
+pos_sun_entry_y,,Sun Position @ entry Y,real(0-10000000000.000),REAL,2155580575,n/a,no,y component of sun position at time of entry [km]
+pos_sun_entry_z,,Sun Position @ entryl Z,real(0-10000000000.000),REAL,-134323986,n/a,no,z component of sun position at time of entry [km]
+pos_earth_entry_x,,Earth Position @ entry X,real(0-10000000000.000),REAL,3903113883,n/a,no,x component of Earth position at time of entry [km]
+pos_earth_entry_y,,EarthPosition @ entry Y,real(0-10000000000.000),REAL,2155580575,n/a,no,y component of Earth position at time of entry [km]
+pos_earth_entry_z,,Earth Position @ entry Z,real(0-10000000000.000),REAL,-134323986,n/a,no,z component of Earth position at time of entry [km]
+pos_target_entry_x,,Target Position @ entry X,real(0-10000000000.000),REAL,3903113883,n/a,no,x component of target position at time of entry [km]
+pos_target_entry_y,,Target Position @ entry Y,real(0-10000000000.000),REAL,2155580575,n/a,no,y component of target position at time of entry [km]
+pos_target_entry_z,,Target Position @ entry Z,real(0-10000000000.000),REAL,-134323986,n/a,no,z component of target position at time of entry [km]
+relay_volume,,Relay Data Volume,real(0-10000000000.000),REAL,???,slider (optional),no,Total data volume relayable by entry vehicle. Nullable

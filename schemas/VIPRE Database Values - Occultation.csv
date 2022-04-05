@@ -1,0 +1,7 @@
+notes,Stores Earth occultations by the target body of the spacecraft that occur on approach to target body,,,,,,,
+,,,,,,,,
+field_name,key,short_name,datatype_range,sql_datatype,example_value,filtering,computable,description
+id,PK,Occultation ID,int(0-1000000),INTEGER,1,n/a,n/a,SQL ID of the occultation
+trajectory_id,FK,Trajectory ID,int(0-1000000),INTEGER,1,n/a,n/a,SQL ID of the parent trajectory
+t_occ_n,,Entry Time,real(0-36500.000),REAL,10611.823,"checkbox (optional, not clear how this would be implemented",no,Time that spacecraft enters into occultation relative to the Earth in days past J2000. Nullable
+t_occ_out,,Exit Time,real(0-36500.000),REAL,10611.823,"checkbox (optional, not clear how this would be implemented",no,Time that spacecraft exits occultation relative to the Earth in days past J2000. Nullable

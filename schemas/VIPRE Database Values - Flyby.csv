@@ -1,0 +1,15 @@
+notes,Flybys and associated orbit parameters listed in trajectory order,,,,,,,
+,,,,,,,,
+field_name,key,short_name,datatype_range,sql_datatype,example_value,filtering,computable,description
+id,PK,Flyby ID,Sequence,INTEGER,1,n/a,no,ID of the Flyby row in database
+trajectory_id,FK,Trajectory ID,int(0-100000),INTEGER,4,n/a,no,SQL trajectory ID
+body_id,FK,Body ID (first flyby),int(0-1000),INTEGER,599,"checkbox (optional, unlikely to be needed)",no,SQL body ID of flyby body
+order,,Flyby Order,int(0-100),INTEGER,1,n/a,no,Order of this flyby in trajectory's flyby sequence
+t_flyby,,Flyby date,real(0-36500.000),REAL,10611.823,"slider (optional, unlikely to be needed)",no,Time of flyby in days past J2000
+altitude,,Flyby altitude,real(0-10000000000.000),REAL,349000.000,"slider (optional, unlikely to be needed)",no,Altitude above flyby body surface at flyby hyperbola periapsis [km]
+v_inf_in_x,,Incoming V infinity Vector X,real(-100 - 100.000000),REAL,20.971509,"slider (optional, unlikely to be needed)",no,x component of incoming flyby v_inifinity [km/s]
+v_inf_in_y,,Incoming V infinity Vector X,real(-100 - 100.000000),REAL,20.971509,"slider (optional, unlikely to be needed)",no,y component of incoming flyby v_inifinity [km/s]
+v_inf_in_z,,Incoming V infinity Vector X,real(-100 - 100.000000),REAL,20.971509,"slider (optional, unlikely to be needed)",no,z component of incoming flyby v_inifinity [km/s]
+v_inf_out_x,,Outgoing V infinity Vector X,real(-100 - 100.000000),REAL,20.971509,"slider (optional, unlikely to be needed)",no,x component of outgoing flyby v_inifinity [km/s]
+v_inf_out_y,,Outgoing V infinity Vector X,real(-100 - 100.000000),REAL,20.971509,"slider (optional, unlikely to be needed)",no,y component of outgoing flyby v_inifinity [km/s]
+v_inf_out_z,,Outgoing V infinity Vector X,real(-100 - 100.000000),REAL,20.971509,"slider (optional, unlikely to be needed)",no,z component of outgoing flyby v_inifinity [km/s]

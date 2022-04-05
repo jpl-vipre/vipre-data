@@ -1,0 +1,13 @@
+notes,"Store maneuvers used on approach to target body. Can include carrier divert manuevers, orbit insertion maneuvers, etc.",,,,,,,
+,,,,,,,,
+field_name,key,short_name,datatype_range,sql_datatype,example_value,filtering,computable,description
+id,PK,Maneuver ID,text,TEXT,1,n/a,n/a,ID of the Maneuver row in database
+entry_id,FK,Entry ID,text,TEXT,1,n/a,n/a,ID of the parent Entry row in database
+maneuver_type,,Maneuver Type,text,TEXT,orbiter separation,checkbox (optional),yes,Type of maneuver performed to separate from entry vehicle. Nullable
+dv_maneuver,,Maneuver DeltaV,real(-100 - 100.000000),REAL,10.656459,slider (optional),yes,Delta V of separation maneuver [km/s]. Nullable
+pos_man_x,,Spacecraft Position @ maneuver X,real(0-10000000000.000),REAL,3903113883,n/a,yes,x component of spacecraft position at time of maneuver [km]. Nullable
+pos_man_y,,Spacecraft Position @ maneuver Y,real(0-10000000000.000),REAL,2155580575,n/a,yes,y component of spacecraft position at time of maneuver [km]. Nullable
+pos_man_z,,Spacecraft Position @ maneuver Z,real(0-10000000000.000),REAL,-134323986,n/a,yes,z component of spacecraft position at time of maneuver [km]. Nullable
+vel_man_x,,Spacecraft Velocity @ maneuver X,real(-100 - 100.000000),REAL,20.971509,n/a,yes,x component of spacecraft velocity at time of maneuver [km]. Nullable
+vel_man_y,,Spacecraft Velocity @ maneuver Y,real(-100 - 100.000000),REAL,10.656459,n/a,yes,y component of spacecraft velocity at time of maneuver [km]. Nullable
+vel_man_z,,Spacecraft Velocity @ maneuver Z,real(-100 - 100.000000),REAL,-0.652681,n/a,yes,z component of spacecraft velocity at time of maneuver [km]. Nullable

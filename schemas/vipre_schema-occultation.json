@@ -1,42 +1,50 @@
 {
   "tablename": "occultation",
-  "note": "TODO",
+  "note": "Stores Earth occultations by the target body of the spacecraft that occur on approach to target body",
   "fields": [
     {
-      "Field name": "id",
-      "Short Name": "Occultation ID",
-      "Datatype (range)": "int(0-1000000)",
-      "Example Value": "1",
-      "Filtering Needs": "n/a",
-      "Back End Computable": "n/a",
-      "Description": "SQL ID of the occultation"
+      "field_name": "id",
+      "key": "PK",
+      "short_name": "Occultation ID",
+      "datatype_range": "int(0-1000000)",
+      "sql_datatype": "INTEGER",
+      "example_value": "1",
+      "filtering": "n/a",
+      "computable": "n/a",
+      "description": "SQL ID of the occultation"
     },
     {
-      "Field name": "entry_id",
-      "Short Name": "Entry ID",
-      "Datatype (range)": "int(0-1000000)",
-      "Example Value": "1",
-      "Filtering Needs": "n/a",
-      "Back End Computable": "n/a",
-      "Description": "SQL ID of the entry"
+      "field_name": "trajectory_id",
+      "key": "FK",
+      "short_name": "Trajectory ID",
+      "datatype_range": "int(0-1000000)",
+      "sql_datatype": "INTEGER",
+      "example_value": "1",
+      "filtering": "n/a",
+      "computable": "n/a",
+      "description": "SQL ID of the parent trajectory"
     },
     {
-      "Field name": "t_occ_n",
-      "Short Name": "Entry time for first occultation",
-      "Datatype (range)": "real(0-36500.000)",
-      "Example Value": "10611.823",
-      "Filtering Needs": "checkbox (optional, not clear how this would be implemented",
-      "Back End Computable": "no",
-      "Description": "Time that spacecraft enters into occultation relative to the Earth in days past J2000. Nullable"
+      "field_name": "t_occ_n",
+      "key": "",
+      "short_name": "Entry Time",
+      "datatype_range": "real(0-36500.000)",
+      "sql_datatype": "REAL",
+      "example_value": "10611.823",
+      "filtering": "checkbox (optional, not clear how this would be implemented",
+      "computable": "no",
+      "description": "Time that spacecraft enters into occultation relative to the Earth in days past J2000. Nullable"
     },
     {
-      "Field name": "t_occ_out",
-      "Short Name": "Exit time for first occultation",
-      "Datatype (range)": "real(0-36500.000)",
-      "Example Value": "10611.823",
-      "Filtering Needs": "checkbox (optional, not clear how this would be implemented",
-      "Back End Computable": "no",
-      "Description": "Time that spacecraft exits occultation relative to the Earth in days past J2000. Nullable"
+      "field_name": "t_occ_out",
+      "key": "",
+      "short_name": "Exit Time",
+      "datatype_range": "real(0-36500.000)",
+      "sql_datatype": "REAL",
+      "example_value": "10611.823",
+      "filtering": "checkbox (optional, not clear how this would be implemented",
+      "computable": "no",
+      "description": "Time that spacecraft exits occultation relative to the Earth in days past J2000. Nullable"
     }
   ]
 }

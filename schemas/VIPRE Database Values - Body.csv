@@ -1,0 +1,11 @@
+notes,Contains information for target and flyby bodies,,,,,,,
+,,,,,,,,
+field_name,key,short_name,datatype_range,sql_datatype,example_value,filtering,computable,description
+id,PK,Body ID,int(0-1000),INTEGER,599,n/a,n,SQL body ID. Plan to use Horizons ID as this value to save space
+name,,Name,text,TEXT,Jupiter,"checkbox (target - default, flyby - optional)",n,name of body
+radius,,Radius,real (0-695700.000),REAL,6378.1366,n/a,n,mean radius of body [km]
+mu,,Gravity parameter,real (0-1.32710000e11),REAL,126686531.9,n/a,n,gravity parameter [km^3/s^2]
+period,,Rotation period,real (0-243.00),REAL,1.02595676,n/a,n,body rotational period [days]
+pole_vec_x,,Pole vector X,real (-1 - 1.000),REAL,0.1224,n/a,n,x component of body spin pole unit vector represented in EMO2000 frame
+pole_vec_y,,Pole vector Y,real (-1 - 1.000),REAL,-0.0310,n/a,n,y component of body spin pole unit vector represented in EMO2000 frame
+pole_vec_z,,Pole vector Z,real (-1 - 1.000),REAL,0.9920,n/a,n,z component of body spin pole unit vector represented in EMO2000 frame

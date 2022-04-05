@@ -1,0 +1,5 @@
+notes,Categorization of trajectories based on the flyby bodies and order in the interplanetary trajectory,,,,,,,
+,,,,,,,,
+field_name,key,short_name,datatype_range,sql_datatype,example_value,filtering,computable,description
+id,PK,Architecture ID,int(0-1000),INTEGER,6,checkbox (optional),n/a,SQL architecture ID indicating the grouping trajectories based on flyby bodies and their order in the interplanetary trajectory
+sequence,,Flyby Sequence,varchar(255),TEXT,"""599-599-699""","checkbox (optional, unlikely to be needed)",no,SQL body IDs of the flybys in order

@@ -28,7 +28,6 @@ class Entry(Base):
     trajectory_id = Column(Integer, ForeignKey("trajectory.id"))
     trajectory = relationship("Trajectory", back_populates="entries")
 
-    occultations = relationship("Occultation", back_populates="entry")
     maneuvers = relationship("Maneuver", back_populates="entry")
 
     # Fields
@@ -84,8 +83,8 @@ class Occultation(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
 
     # Relationships
-    entry_id = Column(Integer, ForeignKey("entry.id"))
-    entry = relationship("Entry", back_populates="occultations")
+    trajectory_id = Column(Integer, ForeignKey("trajectory.id"))
+    trajectory = relationship("Trajectory", back_populates="occultations")
 
     # Fields
     t_occ_n = Column(Float, doc="Time that spacecraft enters into occultation relative to the Earth in days past J2000.")
@@ -105,13 +104,12 @@ class Trajectory(Base):
     architecture = relationship("Architecture")
 
     entries = relationship("Entry", back_populates="trajectory")
-
+    occultations = relationship("Occultation", back_populates="trajectory")
     flybys = relationship("Flyby", back_populates="trajectory")
 
     # Fields
     t_launch = Column(Float, index=True, doc="time of launch in days past J2000")
     t_arr = Column(Float, index=True, doc="time of target arrival in days past J2000")
-    m_arr = Column(Float, index=True, doc="Dry mass deliverable by interplanetary trajectory [kg]")
 
     v_inf_arr_x = Column(Float, index=True, doc="x component of interplanetary arrival velocity at target [km/s]")
     v_inf_arr_y = Column(Float, index=True, doc="x component of interplanetary arrival velocity at target [km/s]")
