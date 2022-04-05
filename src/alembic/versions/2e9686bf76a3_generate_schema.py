@@ -1,8 +1,8 @@
-"""Initial schema
+"""Generate schema
 
-Revision ID: 82933601688b
+Revision ID: 2e9686bf76a3
 Revises: 
-Create Date: 2022-03-24 15:37:58.963139
+Create Date: 2022-04-05 16:55:48.838177
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '82933601688b'
+revision = '2e9686bf76a3'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -49,27 +49,22 @@ def upgrade():
     sa.Column('v_inf_arr_x', sa.Float(), nullable=True),
     sa.Column('v_inf_arr_y', sa.Float(), nullable=True),
     sa.Column('v_inf_arr_z', sa.Float(), nullable=True),
-    sa.Column('pos_sun_x', sa.Float(), nullable=True),
-    sa.Column('pos_sun_y', sa.Float(), nullable=True),
-    sa.Column('pos_sun_z', sa.Float(), nullable=True),
-    sa.Column('pos_earth_x', sa.Float(), nullable=True),
-    sa.Column('pos_earth_y', sa.Float(), nullable=True),
-    sa.Column('pos_earth_z', sa.Float(), nullable=True),
-    sa.Column('pos_target_x', sa.Float(), nullable=True),
-    sa.Column('pos_target_y', sa.Float(), nullable=True),
-    sa.Column('pos_target_z', sa.Float(), nullable=True),
-    sa.Column('pos_sc_x', sa.Float(), nullable=True),
-    sa.Column('pos_sc_y', sa.Float(), nullable=True),
-    sa.Column('pos_sc_z', sa.Float(), nullable=True),
     sa.Column('c3', sa.Float(), nullable=True),
     sa.Column('dv_total', sa.Float(), nullable=True),
-    sa.Column('arrival_mass', sa.Float(), nullable=True),
+    sa.Column('pos_sun_arr_x', sa.Float(), nullable=True),
+    sa.Column('pos_sun_arr_y', sa.Float(), nullable=True),
+    sa.Column('pos_sun_arr_z', sa.Float(), nullable=True),
+    sa.Column('pos_sc_arr_x', sa.Float(), nullable=True),
+    sa.Column('pos_sc_arr_y', sa.Float(), nullable=True),
+    sa.Column('pos_sc_arr_z', sa.Float(), nullable=True),
+    sa.Column('pos_target_arr_x', sa.Float(), nullable=True),
+    sa.Column('pos_target_arr_y', sa.Float(), nullable=True),
+    sa.Column('pos_target_arr_z', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['architecture_id'], ['architecture.id'], ),
     sa.ForeignKeyConstraint(['body_id'], ['body.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('trajectory', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_trajectory_arrival_mass'), ['arrival_mass'], unique=False)
         batch_op.create_index(batch_op.f('ix_trajectory_c3'), ['c3'], unique=False)
         batch_op.create_index(batch_op.f('ix_trajectory_dv_total'), ['dv_total'], unique=False)
         batch_op.create_index(batch_op.f('ix_trajectory_t_arr'), ['t_arr'], unique=False)
@@ -95,20 +90,12 @@ def upgrade():
     sa.Column('pos_sun_entry_x', sa.Float(), nullable=True),
     sa.Column('pos_sun_entry_y', sa.Float(), nullable=True),
     sa.Column('pos_sun_entry_z', sa.Float(), nullable=True),
-    sa.Column('pos_sc_entry_x', sa.Float(), nullable=True),
-    sa.Column('pos_sc_entry_y', sa.Float(), nullable=True),
-    sa.Column('pos_sc_entry_z', sa.Float(), nullable=True),
+    sa.Column('pos_earth_entry_x', sa.Float(), nullable=True),
+    sa.Column('pos_earth_entry_y', sa.Float(), nullable=True),
+    sa.Column('pos_earth_entry_z', sa.Float(), nullable=True),
     sa.Column('pos_target_entry_x', sa.Float(), nullable=True),
     sa.Column('pos_target_entry_y', sa.Float(), nullable=True),
     sa.Column('pos_target_entry_z', sa.Float(), nullable=True),
-    sa.Column('maneuver', sa.String(), nullable=True),
-    sa.Column('dv_maneuver', sa.Float(), nullable=True),
-    sa.Column('pos_man_x', sa.Float(), nullable=True),
-    sa.Column('pos_man_y', sa.Float(), nullable=True),
-    sa.Column('pos_man_z', sa.Float(), nullable=True),
-    sa.Column('vel_man_x', sa.Float(), nullable=True),
-    sa.Column('vel_man_y', sa.Float(), nullable=True),
-    sa.Column('vel_man_z', sa.Float(), nullable=True),
     sa.Column('relay_volume', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['body_id'], ['body.id'], ),
     sa.ForeignKeyConstraint(['trajectory_id'], ['trajectory.id'], ),
@@ -117,7 +104,6 @@ def upgrade():
     with op.batch_alter_table('entry', schema=None) as batch_op:
         batch_op.create_index(batch_op.f('ix_entry_bvec_mag'), ['bvec_mag'], unique=False)
         batch_op.create_index(batch_op.f('ix_entry_bvec_theta'), ['bvec_theta'], unique=False)
-        batch_op.create_index(batch_op.f('ix_entry_dv_maneuver'), ['dv_maneuver'], unique=False)
         batch_op.create_index(batch_op.f('ix_entry_pos_entry_x'), ['pos_entry_x'], unique=False)
         batch_op.create_index(batch_op.f('ix_entry_pos_entry_y'), ['pos_entry_y'], unique=False)
         batch_op.create_index(batch_op.f('ix_entry_pos_entry_z'), ['pos_entry_z'], unique=False)
@@ -131,9 +117,9 @@ def upgrade():
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('trajectory_id', sa.Integer(), nullable=True),
     sa.Column('body_id', sa.Integer(), nullable=True),
-    sa.Column('altitude', sa.Float(), nullable=True),
-    sa.Column('days', sa.Float(), nullable=True),
     sa.Column('order', sa.Integer(), nullable=True),
+    sa.Column('t_flyby', sa.Float(), nullable=True),
+    sa.Column('altitude', sa.Float(), nullable=True),
     sa.Column('v_inf_in_x', sa.Float(), nullable=True),
     sa.Column('v_inf_in_y', sa.Float(), nullable=True),
     sa.Column('v_inf_in_z', sa.Float(), nullable=True),
@@ -149,17 +135,38 @@ def upgrade():
 
     op.create_table('occultation',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('entry_id', sa.Integer(), nullable=True),
+    sa.Column('trajectory_id', sa.Integer(), nullable=True),
     sa.Column('t_occ_n', sa.Float(), nullable=True),
     sa.Column('t_occ_out', sa.Float(), nullable=True),
+    sa.ForeignKeyConstraint(['trajectory_id'], ['trajectory.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('maneuver',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('entry_id', sa.Integer(), nullable=True),
+    sa.Column('maneuver_type', sa.String(), nullable=True),
+    sa.Column('dv_maneuver', sa.Float(), nullable=True),
+    sa.Column('pos_man_x', sa.Float(), nullable=True),
+    sa.Column('pos_man_y', sa.Float(), nullable=True),
+    sa.Column('pos_man_z', sa.Float(), nullable=True),
+    sa.Column('vel_man_x', sa.Float(), nullable=True),
+    sa.Column('vel_man_y', sa.Float(), nullable=True),
+    sa.Column('vel_man_z', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['entry_id'], ['entry.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    with op.batch_alter_table('maneuver', schema=None) as batch_op:
+        batch_op.create_index(batch_op.f('ix_maneuver_dv_maneuver'), ['dv_maneuver'], unique=False)
+
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
+    with op.batch_alter_table('maneuver', schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f('ix_maneuver_dv_maneuver'))
+
+    op.drop_table('maneuver')
     op.drop_table('occultation')
     with op.batch_alter_table('flyby', schema=None) as batch_op:
         batch_op.drop_index(batch_op.f('ix_flyby_body_id'))
@@ -174,7 +181,6 @@ def downgrade():
         batch_op.drop_index(batch_op.f('ix_entry_pos_entry_z'))
         batch_op.drop_index(batch_op.f('ix_entry_pos_entry_y'))
         batch_op.drop_index(batch_op.f('ix_entry_pos_entry_x'))
-        batch_op.drop_index(batch_op.f('ix_entry_dv_maneuver'))
         batch_op.drop_index(batch_op.f('ix_entry_bvec_theta'))
         batch_op.drop_index(batch_op.f('ix_entry_bvec_mag'))
 
@@ -187,7 +193,6 @@ def downgrade():
         batch_op.drop_index(batch_op.f('ix_trajectory_t_arr'))
         batch_op.drop_index(batch_op.f('ix_trajectory_dv_total'))
         batch_op.drop_index(batch_op.f('ix_trajectory_c3'))
-        batch_op.drop_index(batch_op.f('ix_trajectory_arrival_mass'))
 
     op.drop_table('trajectory')
     with op.batch_alter_table('body', schema=None) as batch_op:
