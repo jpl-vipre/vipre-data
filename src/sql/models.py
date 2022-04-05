@@ -35,7 +35,6 @@ class Entry(Base):
     bvec_mag = Column(Integer, index=True, nullable=False)
     safe = Column(Boolean, doc="Flag indicating whether trajectory avoids unsafe conditions (ring impact, etc)")
     t_entry = Column(Float, index=True, doc="Time of atmospheric entry in days past J2000")
-    # entry_trajec = Column(Boolean, nullable=False)
 
     pos_entry_x = Column(Float, index=True, doc="x component of spacecraft position at time of entry [km]")
     pos_entry_y = Column(Float, index=True, doc="y component of spacecraft position at time of entry [km]")
@@ -166,12 +165,12 @@ class Flyby(Base):
     t_flyby = Column(Float, doc="Time of flyby in days past J2000")
     altitude = Column(Float, doc="Altitude above flyby body surface at flyby hyperbola periapsis [km]")
 
-    v_inf_in_x = Column(Float, doc="x component of incoming flyby v_inifinity [km/s]")
-    v_inf_in_y = Column(Float, doc="y component of incoming flyby v_inifinity [km/s]")
-    v_inf_in_z = Column(Float, doc="z component of incoming flyby v_inifinity [km/s]")
-    v_inf_out_x = Column(Float, doc="x component of incoming flyby v_inifinity [km/s]")
-    v_inf_out_y = Column(Float, doc="y component of incoming flyby v_inifinity [km/s]")
-    v_inf_out_z = Column(Float, doc="z component of incoming flyby v_inifinity [km/s]")
+    v_inf_in_x = Column(Float, doc="x component of incoming flyby v_infinity [km/s]")
+    v_inf_in_y = Column(Float, doc="y component of incoming flyby v_infinity [km/s]")
+    v_inf_in_z = Column(Float, doc="z component of incoming flyby v_infinity [km/s]")
+    v_inf_out_x = Column(Float, doc="x component of incoming flyby v_infinity [km/s]")
+    v_inf_out_y = Column(Float, doc="y component of incoming flyby v_infinity [km/s]")
+    v_inf_out_z = Column(Float, doc="z component of incoming flyby v_infinity [km/s]")
 
     # constrain unique(trajectory_id + order)
 

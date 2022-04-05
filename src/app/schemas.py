@@ -7,19 +7,18 @@ from pydantic import BaseModel, Field
 class FilterCategory(str, Enum):
     CHECKBOX = "checkbox"
     VALUE = "value"
-    SLIDER = "slider"
+    RANGE = "range"
 
 
 class Filter(BaseModel):
     display_name: str
     field_name: str
-    category: FilterCategory = Field(FilterCategory.SLIDER)
+    category: FilterCategory = Field(FilterCategory.RANGE)
 
 
 TrajectoryFilters: list[Filter] = [
     Filter(display_name="Launch Date", field_name="t_launch"),
     Filter(display_name="Arrival Date", field_name="t_arr"),
-    Filter(display_name="Arrival Mass", field_name="m_arr"),
     Filter(display_name="Arrival V Infinity Vector X", field_name="v_inf_arr_x"),
     Filter(display_name="Arrival V Infinity Vector X", field_name="v_inf_arr_y"),
     Filter(display_name="Arrival V Infinity Vector X", field_name="v_inf_arr_z"),
@@ -65,7 +64,7 @@ class FilterRequest(BaseModel):
 class FilterRangeRequest(FilterRequest):
     lower: number
     upper: number
-    category = FilterCategory.SLIDER
+    category: FilterCategory.RANGE
 
 
 class FilterCheckboxRequest(FilterRequest):

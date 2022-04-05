@@ -25,7 +25,7 @@ Personally, I would advocate for a complete separation of these things and keep 
 
 ## Discussion
 
-- In addition to showing the values computed by MatLab and stored in the database (trajectories, flybys, entries, etc.), VIPRE will also ned to display trajectory hyperbola, and other values which are computed on-the-fly for a single, selected point. These values should not be pre-computed due to their computational simplicity yet large dimensionality.
+- In addition to showing the values computed by MatLab and stored in the database (trajectories, flybys, entries, etc.), VIPRE will also need to display trajectory hyperbola, and other values which are computed on-the-fly for a single, selected point. These values should not be pre-computed due to their computational simplicity yet large dimensionality.
 - VIPRE will also make use of many other scripts and tools that have been developed by scientists at JPL; most of these have been written in Python or with Python in mind.
 - Additionally, the support/maintenance plan for VIPRE is uncertain, but it is likely that TeamX will be interested in this tool; they use Python for all of their development and thus would be most comfortable supporting a tool written in Python.
 - Alex is comfortable with Python and can easily translate as much of the MatLab code as is helpful to Python/Numpy functions.
@@ -40,5 +40,5 @@ Personally, I would advocate for a complete separation of these things and keep 
 - This will all be done in Python to support maintenance and adaptability in the future.
 - `vipre-data` will expose a REST API over http to serve such data requests.
 - Alex will develop a library to perform these on-the-fly calculations that will be called by `vipre-data` when needed.
-- Ryan will provide a draft API spec that outlines some of the data requests he will need to make from the front-end application.
+- Ryan will provide a draft API spec that outlines some data requests he will need to make from the front-end application.
 - Michael will develop a REST API using Python (FastAPI) to answer these requests.

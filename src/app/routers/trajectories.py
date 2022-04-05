@@ -27,7 +27,7 @@ def get_trajectories(req: schemas.TrajectoryRequest):
         col = getattr(models.Trajectory, f.field_name)
 
         # Apply the appropriate where clause based on the filter type
-        if f.category == schemas.FilterCategory.SLIDER:
+        if f.category == schemas.FilterCategory.RANGE:
             f: schemas.FilterRangeRequest
             query = query.where(col > f.lower)
             query = query.where(col < f.upper)
