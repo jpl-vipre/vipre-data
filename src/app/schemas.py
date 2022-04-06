@@ -7,13 +7,13 @@ from pydantic import BaseModel, Field
 class FilterCategory(str, Enum):
     CHECKBOX = "checkbox"
     VALUE = "value"
-    RANGE = "range"
+    SLIDER = "slider"
 
 
 class Filter(BaseModel):
     display_name: str
     field_name: str
-    category: FilterCategory = Field(FilterCategory.RANGE)
+    category: FilterCategory = FilterCategory.SLIDER
 
 
 TrajectoryFilters: list[Filter] = [
@@ -64,17 +64,17 @@ class FilterRequest(BaseModel):
 class FilterRangeRequest(FilterRequest):
     lower: number
     upper: number
-    category: FilterCategory.RANGE
+    category: typing.Literal[FilterCategory.SLIDER]
 
 
 class FilterCheckboxRequest(FilterRequest):
     checked: bool
-    category = FilterCategory.CHECKBOX
+    category: typing.Literal[FilterCategory.CHECKBOX]
 
 
 class FilterValueRequest(FilterRequest):
     value: typing.Union[number, str]
-    category = FilterCategory.VALUE
+    category: typing.Literal[FilterCategory.VALUE]
 
 
 class TrajectoryRequest(BaseModel):
