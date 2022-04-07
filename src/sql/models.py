@@ -117,17 +117,17 @@ class Trajectory(Base):
     c3 = Column(Float, index=True, doc="characteristic energy of launch [km^2/s^2]")
     dv_total = Column(Float, index=True, doc="total DeltaV required for interplanetary trajectory [km/s]")
 
-    pos_sun_arr_x = Column(Float, doc="x component of sun position at time of arrival [km]")
-    pos_sun_arr_y = Column(Float, doc="y component of sun position at time of arrival [km]")
-    pos_sun_arr_z = Column(Float, doc="z component of sun position at time of arrival [km]")
+    pos_earth_x = Column(Float, doc="x component of sun position at time of arrival [km]")
+    pos_earth_y = Column(Float, doc="y component of sun position at time of arrival [km]")
+    pos_earth_z = Column(Float, doc="z component of sun position at time of arrival [km]")
 
-    pos_sc_arr_x = Column(Float, doc="x component of spacecraft position at time of arrival [km]")
-    pos_sc_arr_y = Column(Float, doc="y component of spacecraft position at time of arrival [km]")
-    pos_sc_arr_z = Column(Float, doc="z component of spacecraft position at time of arrival [km]")
+    pos_sc_x = Column(Float, doc="x component of spacecraft position at time of arrival [km]")
+    pos_sc_y = Column(Float, doc="y component of spacecraft position at time of arrival [km]")
+    pos_sc_z = Column(Float, doc="z component of spacecraft position at time of arrival [km]")
 
-    pos_target_arr_x = Column(Float, doc="x component of target position at time of arrival [km]")
-    pos_target_arr_y = Column(Float, doc="y component of target position at time of arrival [km]")
-    pos_target_arr_z = Column(Float, doc="z component of target position at time of arrival [km]")
+    pos_target_x = Column(Float, doc="x component of target position at time of arrival [km]")
+    pos_target_y = Column(Float, doc="y component of target position at time of arrival [km]")
+    pos_target_z = Column(Float, doc="z component of target position at time of arrival [km]")
 
 
 class Body(Base):

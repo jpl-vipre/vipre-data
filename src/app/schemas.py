@@ -1,7 +1,7 @@
 import typing
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, conint, create_model
 
 
 class FilterCategory(str, Enum):
@@ -77,6 +77,26 @@ class FilterValueRequest(FilterRequest):
     category: typing.Literal[FilterCategory.VALUE]
 
 
-class TrajectoryRequest(BaseModel):
-    filters: list[typing.Union[FilterRangeRequest, FilterCheckboxRequest, FilterValueRequest]]
+Filters = list[typing.Union[FilterRangeRequest, FilterCheckboxRequest, FilterValueRequest]]
+
+
+class DataRequest(BaseModel):
+    filters: Filters
     fields: typing.Optional[list[str]]
+    limit: conint(gt=0, le=1000) = 100
+
+
+class Body(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        orm_mode = True
+        extra = "allow"
+
+
+class Trajectory(BaseModel):
+
+    class Config:
+        orm_mode = True
+        extra = "allow"
