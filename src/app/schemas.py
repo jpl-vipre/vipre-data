@@ -1,7 +1,7 @@
 import typing
 from enum import Enum
 
-from pydantic import BaseModel, Field, conint, create_model
+from pydantic import BaseModel, conint
 
 
 class FilterCategory(str, Enum):
@@ -86,6 +86,28 @@ class DataRequest(BaseModel):
     limit: conint(gt=0, le=1000) = 100
 
 
+class TrajectoryRequest(DataRequest):
+    class Config:
+        schema_extra = {
+            "example": {
+                "filters": [{"field_name": "c3", "category": "slider", "lower": 97, "upper": 99}],
+                "fields": ["id", "c3", "dv_total", "t_launch"],
+                "limit": 100,
+            }
+        }
+
+
+class EntryRequest(DataRequest):
+    class Config:
+        schema_extra = {
+            "example": {
+                "filters": [{"field_name": "c3", "category": "slider", "lower": 97, "upper": 99}],
+                "fields": ["id", "c3", "dv_total", "t_launch"],
+                "limit": 100,
+            }
+        }
+
+
 class Body(BaseModel):
     id: int
     name: str
@@ -95,7 +117,65 @@ class Body(BaseModel):
         extra = "allow"
 
 
+class Architecture(BaseModel):
+    sequence: str
+
+    class Config:
+        orm_mode = True
+
+
+class Entry(BaseModel):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+class Occultation(BaseModel):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+class Flyby(BaseModel):
+    flyby_body: Body
+    order: int
+    t_flyby: float
+
+    class Config:
+        orm_mode = True
+
+
 class Trajectory(BaseModel):
+    id: int
+
+    target_body: Body
+    architecture: typing.Optional[Architecture]
+    occultations: typing.Optional[list[Occultation]]
+    flybys: typing.Optional[list[Flyby]]
+
+    t_launch: typing.Optional[float]
+    t_arr: typing.Optional[float]
+
+    v_inf_arr_x: typing.Optional[float]
+    v_inf_arr_y: typing.Optional[float]
+    v_inf_arr_z: typing.Optional[float]
+
+    c3: typing.Optional[float]
+    dv_total: typing.Optional[float]
+
+    pos_earth_x: typing.Optional[float]
+    pos_earth_y: typing.Optional[float]
+    pos_earth_z: typing.Optional[float]
+
+    pos_sc_x: typing.Optional[float]
+    pos_sc_y: typing.Optional[float]
+    pos_sc_z: typing.Optional[float]
+
+    pos_target_x: typing.Optional[float]
+    pos_target_y: typing.Optional[float]
+    pos_target_z: typing.Optional[float]
 
     class Config:
         orm_mode = True
