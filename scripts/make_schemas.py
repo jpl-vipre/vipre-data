@@ -28,9 +28,9 @@ def make_schema_jsons(path: Path):
             json.dump(data, json_file, indent=2)
 
 
-if __name__ == '__main__':
-    schemas = Path().absolute().parent / "schemas"
+if __name__ == "__main__":
+    schemas = Path().absolute().parent / "vipre-schemas/sheets"
     print(schemas)
-    assert (schemas.exists())
+    assert schemas.exists()
 
     make_schema_jsons(schemas)
