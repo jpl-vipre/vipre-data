@@ -42,3 +42,8 @@ def get_trajectory_fields() -> list[str]:
 @router.get("/fields/entries", response_model=list[str])
 def get_entry_fields() -> list[str]:
     return get_column_names(Entry)
+
+
+@router.get("/version")
+def version():
+    return "v0.1.0"

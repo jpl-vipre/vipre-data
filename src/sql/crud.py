@@ -1,6 +1,6 @@
-from typing import Optional, Union
+from typing import Optional, Union, Type
 
-from sqlalchemy.orm import Query, Session
+from sqlalchemy.orm import Query, Session, defer
 
 from app import schemas
 from sql import models
@@ -13,18 +13,18 @@ filter_fields_map: dict[str, set] = {
 
 def make_query(
     db: Session,
-    model: Union[models.Trajectory, models.Entry],
+    model: Union[Type[models.Trajectory], Type[models.Entry]],
     filters: schemas.Filters,
     fields: Optional[list[str]] = None,
     limit: Optional[int] = None,
 ) -> Query:
     query: Query = db.query(model)  # Initialize base query
-    if fields:
-        # Limit select to user-specified fields that are valid model attributes
-        columns = [getattr(model, field, None) for field in fields]
-        columns = list(filter(None, columns))  # Filter out invalid fields
-        # Default to only returning ID's if no valid fields are passed
-        query = query.with_only_columns(columns or model.id)
+    # if fields:
+    #     # Limit select to user-specified fields that are valid model attributes
+    #     columns = [getattr(model, field, None) for field in fields]
+    #     columns = list(filter(None, columns))  # Filter out invalid fields
+    #     # Default to only returning ID's if no valid fields are passed
+    #     query = query.with_only_columns(columns or model.id)
     for f in filters:
         # Ensure that all requested filter field_names are valid
         filter_fields = filter_fields_map.get(model.__name__, set())
@@ -54,6 +54,26 @@ def make_query(
     return query
 
 
+def get_trajectory(db: Session, trajectory_id: int) -> models.Trajectory:
+    return db.query(models.Trajectory).where(models.Trajectory.id == trajectory_id).first()
+
+
+def get_trajectory_entries(
+    db: Session, trajectory_id: int, limit: int, offset: int
+) -> list[models.Entry]:
+    query: Query = db.query(models.Entry).where(models.Entry.trajectory_id == trajectory_id)
+    results = query.limit(limit).offset(offset).all()
+    return results
+
+
+def count_trajectory_entries(db: Session, trajectory_id: int) -> int:
+    return db.query(models.Entry).where(models.Entry.trajectory_id == trajectory_id).count()
+
+
+def get_entry(db: Session, entry_id: int) -> models.Trajectory:
+    return db.query(models.Entry).where(models.Entry.id == entry_id).first()
+
+
 # def query_trajectories(
 #         db: Session,
 #         filters: schemas.Filters, fields: Optional[list[str]] = None,
@@ -63,8 +83,11 @@ def make_query(
 #
 #
 # def query_entries(
-#         db: Session,
-#         filters: schemas.Filters, fields: Optional[list[str]] = None,
-#         limit: Optional[int] = None
+#     db: Session,
+#     filters: schemas.Filters,
+#     fields: Optional[list[str]] = None,
+#     limit: Optional[int] = None,
+#     trajectory_id: Optional[int] = None,
 # ) -> Query:
+#     filters.append(schemas.FilterValueRequest(field_name="trajectory_id", value=trajectory_id))
 #     return make_query(db, models.Entry, filters, fields, limit)
