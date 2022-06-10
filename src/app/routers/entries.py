@@ -11,8 +11,8 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=list[schemas.Entry], response_model_exclude_unset=False)
-def query_entries(req: schemas.EntryRequest, db: Session = Depends(deps.get_db)):
+@router.post("/", response_model=list[schemas.response.Entry], response_model_exclude_unset=False)
+def query_entries(req: schemas.request.EntryRequest, db: Session = Depends(deps.get_db)):
     query = crud.make_query(db, models.Entry, req.filters, req.fields, req.limit)
     result = query.all()
     print(result)
@@ -33,7 +33,7 @@ def query_entries(req: schemas.EntryRequest, db: Session = Depends(deps.get_db))
 #     return result
 
 
-@router.get("/{entry_id}", response_model=schemas.Entry)
+@router.get("/{entry_id}", response_model=schemas.response.Entry)
 def get_entry(entry_id: int, db: Session = Depends(deps.get_db)):
     result = crud.get_entry(db, entry_id)
     print(result)

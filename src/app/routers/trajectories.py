@@ -11,22 +11,24 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=list[schemas.Trajectory], response_model_exclude_unset=True)
-def get_trajectories(req: schemas.TrajectoryRequest, db: Session = Depends(deps.get_db)):
+@router.post(
+    "/", response_model=list[schemas.response.Trajectory], response_model_exclude_unset=True
+)
+def get_trajectories(req: schemas.request.TrajectoryRequest, db: Session = Depends(deps.get_db)):
     query = crud.make_query(db, models.Trajectory, req.filters, req.fields, req.limit)
     result = query.all()
     print(result)
     return result
 
 
-@router.get("/{trajectory_id}", response_model=schemas.Trajectory)
+@router.get("/{trajectory_id}", response_model=schemas.response.Trajectory)
 def get_trajectory(trajectory_id: int, db: Session = Depends(deps.get_db)):
     result = crud.get_trajectory(db, trajectory_id)
     print(result)
     return result
 
 
-@router.get("/{trajectory_id}/entries", response_model=list[schemas.Entry])
+@router.get("/{trajectory_id}/entries", response_model=list[schemas.response.Entry])
 def get_trajectory_entries(
     trajectory_id: int, limit: int = 100, offset: int = 0, db: Session = Depends(deps.get_db)
 ):

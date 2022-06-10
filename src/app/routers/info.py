@@ -8,7 +8,7 @@ router = APIRouter(
 )
 
 
-@router.get("/filters", response_model=schemas.FiltersResponse)
+@router.get("/filters", response_model=schemas.response.FiltersResponse)
 def get_filters():
     return {
         "TrajectoryFilters": get_trajectory_filters(),
@@ -16,17 +16,17 @@ def get_filters():
     }
 
 
-@router.get("/filters/trajectories", response_model=list[schemas.Filter])
+@router.get("/filters/trajectories", response_model=list[schemas.utils.Filter])
 def get_trajectory_filters():
-    return schemas.TrajectoryFilters
+    return schemas.utils.TrajectoryFilters
 
 
-@router.get("/filters/entries", response_model=list[schemas.Filter])
+@router.get("/filters/entries", response_model=list[schemas.utils.Filter])
 def get_entry_filters():
-    return schemas.EntryFilters
+    return schemas.utils.EntryFilters
 
 
-@router.get("/fields", response_model=schemas.FieldsResponse)
+@router.get("/fields", response_model=schemas.response.FieldsResponse)
 def get_fields():
     return {
         "TrajectoryFields": get_trajectory_fields(),

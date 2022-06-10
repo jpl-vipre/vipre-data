@@ -6,15 +6,15 @@ from app import schemas
 from sql import models
 
 filter_fields_map: dict[str, set] = {
-    "Trajectory": schemas.trajectory_filter_fields,
-    "Entry": schemas.entry_filter_fields,
+    "Trajectory": schemas.utils.trajectory_filter_fields,
+    "Entry": schemas.utils.entry_filter_fields,
 }
 
 
 def make_query(
     db: Session,
     model: Union[Type[models.Trajectory], Type[models.Entry]],
-    filters: schemas.Filters,
+    filters: schemas.request.Filters,
     fields: Optional[list[str]] = None,
     limit: Optional[int] = None,
 ) -> Query:
@@ -37,15 +37,15 @@ def make_query(
         col = getattr(model, f.field_name)
 
         # Apply the appropriate where clause based on the filter type
-        if f.category == schemas.FilterCategory.SLIDER:
-            f: schemas.FilterRangeRequest
+        if f.category == schemas.utils.FilterCategory.SLIDER:
+            f: schemas.request.FilterRangeRequest
             query = query.where(col >= f.lower)
             query = query.where(col <= f.upper)
-        elif f.category == schemas.FilterCategory.CHECKBOX:
-            f: schemas.FilterCheckboxRequest
+        elif f.category == schemas.utils.FilterCategory.CHECKBOX:
+            f: schemas.request.FilterCheckboxRequest
             query = query.where(col == f.checked)
-        elif f.category == schemas.FilterCategory.VALUE:
-            f: schemas.FilterValueRequest
+        elif f.category == schemas.utils.FilterCategory.VALUE:
+            f: schemas.request.FilterValueRequest
             query = query.where(col == f.value)
     # TODO: Is limiting rows going to be a problem? Do we need paging?
     if limit:
@@ -81,11 +81,18 @@ def count_body_trajectories(db: Session, target_body_id) -> int:
 def get_body_trajectories(
     db: Session,
     target_body_id: int,
-    filters: schemas.Filters,
+    filters: schemas.request.Filters,
     limit: Optional[int] = None,
 ) -> list[models.Trajectory]:
     query = db.query(models.Trajectory)
     query = query.where(models.Trajectory.body_id == target_body_id)
+    return query.all()
+
+
+def get_bodies(db: Session, body_id: Optional[int] = None) -> list[models.Body]:
+    query = db.query(models.Body)
+    if body_id:
+        query = query.where(models.Body.id == body_id)
     return query.all()
 
 
