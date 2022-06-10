@@ -15,5 +15,9 @@ router = APIRouter(
     "/trajectory_selection/{target_body_id}",
     response_model=list[schemas.TrajectorySummary],
 )
-def trajectory_selection(target_body_id: int, req: schemas.TrajectoryRequest):
-    pass
+def trajectory_selection(
+    target_body_id: int, req: schemas.TrajectoryRequest, db: Session = Depends(deps.get_db)
+):
+    result = crud.get_body_trajectories(db, target_body_id, filters=req.filters, limit=req.limit)
+    print(result)
+    return result

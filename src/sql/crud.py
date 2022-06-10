@@ -74,6 +74,21 @@ def get_entry(db: Session, entry_id: int) -> models.Trajectory:
     return db.query(models.Entry).where(models.Entry.id == entry_id).first()
 
 
+def count_body_trajectories(db: Session, target_body_id) -> int:
+    return db.query(models.Trajectory).where(models.Trajectory.body_id == target_body_id).count()
+
+
+def get_body_trajectories(
+    db: Session,
+    target_body_id: int,
+    filters: schemas.Filters,
+    limit: Optional[int] = None,
+) -> list[models.Trajectory]:
+    query = db.query(models.Trajectory)
+    query = query.where(models.Trajectory.body_id == target_body_id)
+    return query.all()
+
+
 # def query_trajectories(
 #         db: Session,
 #         filters: schemas.Filters, fields: Optional[list[str]] = None,
