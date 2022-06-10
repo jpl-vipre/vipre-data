@@ -3,4 +3,5 @@ data/*
 notebooks/scratch/*
 *.db
 
+!data/EJS_subset.db
 !.gitkeep
