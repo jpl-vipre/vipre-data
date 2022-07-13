@@ -16,6 +16,7 @@ class Filter(BaseModel):
     category: FilterCategory = FilterCategory.SLIDER
 
 
+# TODO: Add architecture ID?
 TrajectoryFilters: list[Filter] = [
     Filter(display_name="Launch Date", field_name="t_launch"),
     Filter(display_name="Arrival Date", field_name="t_arr"),
@@ -48,6 +49,10 @@ number = t.Union[int, float]
 class LatLong(BaseModel):
     latitude: float
     longitude: float
+
+
+class LatLongH(LatLong):
+    height: float
 
 
 Coord = tuple[float, float, float]

@@ -17,6 +17,8 @@ numpy = "^1.22.3"
 [tool.poetry.dev-dependencies]
 jupyterlab = "^3.2.9"
 pex = "^2.1.92"
+pandas = "^1.4.3"
+nbconvert = {extras = ["webpdf"], version = "^6.5.0"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

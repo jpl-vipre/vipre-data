@@ -1,27 +1,32 @@
+from typing import Tuple, Any
+
 import numpy as np
-from numpy import linalg as la
+from numpy import linalg as la, ndarray
 
 
-def conic_2point(r_1, v_1, t_1, r_2, v_2, t_2, ta_step, mu, rev_check, time_flag) -> float:
+def conic_2point(
+    r_1, v_1, t_1, r_2, v_2, t_2, ta_step, mu, rev_check, time_flag
+) -> tuple[ndarray, ndarray, ndarray]:
     """
     Compute an array of N points along a conic orbit between two postions of the trajectory.
     Input vectors and arrays of vectors are expected as 3xN np.arrays where rows are x,y,z
     components and N is the number of array entries.
 
-    :inputs:
-    r_i: sun centered position at time i [km]
-    v_i: conic velocity at time i[km/s]
-    t_i: time i [days past high noon 1/1/2000]. Unused if not performing revolution check
-    ta_step: true anomaly angular step count
-    mu: gravity constant of central body [km3/s2]
-    rev_check: flag indicating whether or not to check for multiple
-    revolutions based on input time. 1 to toggle on
-    time_flag: flag indication whether or not to compute the time at each
-    orbit point. 1 to toggle on
+    :param r_1: sun centered position at time 1 [km]
+    :param v_1: conic velocity at time 1 [km/s]
+    :param t_1: time 1 [days past high noon 1/1/2000]. Unused if not performing revolution check
+    :param r_2: sun centered position at time 2 [km]
+    :param v_2: conic velocity at time 1 [km/s]
+    :param t_2: time 2 [days past high noon 1/1/2000]. Unused if not performing revolution check
+    :param ta_step: true anomaly angular step count
+    :param mu: gravity constant of central body [km3/s2]
+    :param rev_check: flag indicating whether to check for multiple revolutions based on input time. 1 to toggle on
+    :param time_flag: flag indication whether to compute the time at each orbit point. 1 to toggle on
+
     :return:
-    pos_set: position vector along trajectory in ta_step evenly spaced true anomaly steps
-    vel_set: velocity vector along trajectory in ta_step evenlyspaced true anomaly steps
-    time_set: time vector along trajectory in ta_step evenly spaced true anomaly steps. Must be specified in call
+        pos_set: position vector along trajectory in ta_step evenly spaced true anomaly steps
+        vel_set: velocity vector along trajectory in ta_step evenlyspaced true anomaly steps
+        time_set: time vector along trajectory in ta_step evenly spaced true anomaly steps. Must be specified in call
 
     Example inputs 1:
     ta_step=15
@@ -107,7 +112,7 @@ def conic_2point(r_1, v_1, t_1, r_2, v_2, t_2, ta_step, mu, rev_check, time_flag
     if len(wrap_ind) > 0:
         ta[wrap_ind] = ta_2[wrap_ind] - ta_1[wrap_ind] + 2.0 * np.pi  # perform rotation wrapping
 
-    ell_ind = np.where(ecc < 1.0)  # identifty elliptical cases
+    ell_ind = np.where(ecc < 1.0)  # identify elliptical cases
     period = np.zeros(np.shape(ta))
     revs = np.zeros(np.shape(ta))
     if rev_check and len(ell_ind) > 0:  # count total number of orbits if specified
@@ -144,12 +149,12 @@ def conic_2point(r_1, v_1, t_1, r_2, v_2, t_2, ta_step, mu, rev_check, time_flag
     ).T
 
     # generate times
+    time_set = np.zeros((np.shape(np.transpose(ta_set, axes=[2, 0, 1]))))
     if time_flag:
         dta_set = (
             np.transpose(ta_set, axes=[2, 0, 1]).T[1:].T[0]
             - np.transpose(ta_set, axes=[2, 0, 1]).T[0]
         )  # true anomaly differences
-        time_set = np.zeros((np.shape(np.transpose(ta_set, axes=[2, 0, 1]))))
         time_set[0].T[0] = t_1.T  # initial time setting
         tof = (
             find_tof(
@@ -165,13 +170,10 @@ def conic_2point(r_1, v_1, t_1, r_2, v_2, t_2, ta_step, mu, rev_check, time_flag
         revs_adjust = np.where((tof < 0))  # adjust for TOF algorithm angle wrapping
         rev_count[revs_adjust] = rev_count[revs_adjust] + 1
         time_set[0].T[1:] = (t_1 + tof + rev_count * period / 86400.0).T  # generate time array
-        return (pos_set, vel_set, time_set)
-    else:
-        return (pos_set, vel_set)
-    pass
+    return pos_set, vel_set, time_set
 
 
-def get_true_anomaly(p, ecc, r, v) -> float:
+def get_true_anomaly(p, ecc, r, v) -> np.ndarray:
     """
     Compute true anomaly from position, velocity, Keplerian elements.
     Inputs can be scalar or 1xN np arrays

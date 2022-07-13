@@ -33,6 +33,7 @@ def get_trajectory_entries(
     trajectory_id: int, limit: int = 100, offset: int = 0, db: Session = Depends(deps.get_db)
 ):
     result = crud.get_trajectory_entries(db, trajectory_id, limit, offset)
+    # TODO: add LatLongH field to all the entries
     print(result)
     return result
 

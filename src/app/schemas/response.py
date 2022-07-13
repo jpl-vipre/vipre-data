@@ -74,6 +74,8 @@ class TrajectorySummary(BaseModel):
     v_inf_arr_x: t.Optional[float]
     v_inf_arr_y: t.Optional[float]
     v_inf_arr_z: t.Optional[float]
+    t_arr: t.Optional[float]
+    c3: t.Optional[float]
 
     class Config:
         orm_mode = True
@@ -86,10 +88,6 @@ class Trajectory(TrajectorySummary):
     architecture: t.Optional[Architecture]
     occultations: t.Optional[list[Occultation]]
     flybys: t.Optional[list[Flyby]]
-
-    t_arr: t.Optional[float]
-
-    c3: t.Optional[float]
 
 
 class TrajectoryFull(Trajectory):
@@ -124,6 +122,8 @@ class Entry(BaseModel):
     vel_entry_x: t.Optional[float]
     vel_entry_y: t.Optional[float]
     vel_entry_z: t.Optional[float]
+
+    # TODO: Add LatLongH to this schema?
 
     class Config:
         orm_mode = True

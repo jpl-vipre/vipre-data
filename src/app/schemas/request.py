@@ -70,3 +70,7 @@ class EntryRequest(DataRequest):
                 "limit": 100,
             }
         }
+
+
+class EntryArcRequest(BaseModel):
+    ta_step: conint(gt=15, le=100) = 25
