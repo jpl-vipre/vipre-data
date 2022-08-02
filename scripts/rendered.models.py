@@ -168,8 +168,17 @@ class Maneuver(Base):
         nullable=True,
         doc="Type of maneuver performed to separate from entry vehicle.",
     )
-    dv_maneuver = Column(
-        Float, index=True, nullable=True, doc="Delta V of separation maneuver [km/s]."
+    time_man = Column(
+        Integer, nullable=True, doc="Time that spacecraft performs maneuver in seconds past J2000."
+    )
+    dv_maneuver_x = Column(
+        Float, index=True, nullable=True, doc="Delta V of separation maneuver [km/s] in X."
+    )
+    dv_maneuver_y = Column(
+        Float, index=True, nullable=True, doc="Delta V of separation maneuver [km/s] in Y."
+    )
+    dv_maneuver_z = Column(
+        Float, index=True, nullable=True, doc="Delta V of separation maneuver [km/s] in Z."
     )
     pos_man_x = Column(
         Float, nullable=True, doc="x component of spacecraft position at time of maneuver [km]."
