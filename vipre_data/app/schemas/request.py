@@ -2,7 +2,7 @@ import typing as t
 
 from pydantic import BaseModel, conint
 
-from app.schemas.utils import FilterCategory, number
+from .utils import FilterCategory, number
 
 
 class FilterRequest(BaseModel):

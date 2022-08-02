@@ -2,8 +2,8 @@ from typing import Optional, Union, Type
 
 from sqlalchemy.orm import Query, Session, defer
 
-from app import schemas
-from sql import models
+from vipre_data.app import schemas
+from vipre_data.sql import models
 
 filter_fields_map: dict[str, set] = {
     "Trajectory": schemas.utils.trajectory_filter_fields,

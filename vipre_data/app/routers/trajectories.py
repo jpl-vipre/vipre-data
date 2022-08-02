@@ -17,14 +17,12 @@ router = APIRouter(
 def get_trajectories(req: schemas.request.TrajectoryRequest, db: Session = Depends(deps.get_db)):
     query = crud.make_query(db, models.Trajectory, req.filters, req.fields, req.limit)
     result = query.all()
-    print(result)
     return result
 
 
 @router.get("/{trajectory_id}", response_model=schemas.response.Trajectory)
 def get_trajectory(trajectory_id: int, db: Session = Depends(deps.get_db)):
     result = crud.get_trajectory(db, trajectory_id)
-    print(result)
     return result
 
 
@@ -34,12 +32,10 @@ def get_trajectory_entries(
 ):
     result = crud.get_trajectory_entries(db, trajectory_id, limit, offset)
     # TODO: add LatLongH field to all the entries
-    print(result)
     return result
 
 
 @router.get("/{trajectory_id}/entries/count", response_model=int)
 def count_trajectory_entries(trajectory_id: int, db: Session = Depends(deps.get_db)):
     result = crud.count_trajectory_entries(db, trajectory_id)
-    print(result)
     return result

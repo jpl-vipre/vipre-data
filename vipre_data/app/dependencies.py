@@ -1,4 +1,4 @@
-from sql.database import SessionLocal
+from vipre_data.sql.database import SessionLocal
 
 
 # Dependency
