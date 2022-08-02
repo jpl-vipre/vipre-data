@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from app import dependencies as deps
 from app import schemas
+from app.schemas.utils import get_xyz_tuple, make_lat_lon
 from computations.cart2sph import cart2sph
 from sql import crud, models
 from computations.conic_2point import conic_2point
@@ -12,37 +13,6 @@ router = APIRouter(
     prefix="/visualizations",
     tags=["visualizations"],
 )
-
-
-def get_xyz_tuple(obj: object, field_name: str) -> np.ndarray:
-    """
-    Create x, y, z tuples from an object based on field name.
-    The object is expected to have attributes with "<field_name>_{x,y,z}".
-
-    :param obj: python object with fields mapping to xyz coordinates ("_x", "_y", "_z")
-    :param field_name: prefix of the fields with xzy coordinates
-    :return: numpy array of shape (1,3,1)
-    """
-    assert all(
-        hasattr(obj, f"{field_name}_{i}") for i in "xyz"
-    ), f"Field: {field_name} does not exist on object: {obj}"
-    return np.array([[[getattr(obj, f"{field_name}_{i}")] for i in "xyz"]])
-
-
-def make_lat_lon(
-    height: np.ndarray, lat: np.ndarray, lon: np.ndarray
-) -> list[schemas.utils.LatLongH]:
-    """
-
-    :param lat:
-    :param lon:
-    :param height:
-
-    :return:
-    """
-    fields = ["height", "latitude", "longitude"]
-    points = np.array([height, lat, lon]).T.reshape(-1, 3)
-    return [schemas.utils.LatLongH(**{k: v for k, v in zip(fields, point)}) for point in points]
 
 
 @router.post(

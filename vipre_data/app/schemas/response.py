@@ -3,7 +3,8 @@ import typing as t
 from pydantic import BaseModel as PydanticBaseModel, validator, root_validator
 import numpy as np
 
-from .utils import Filter
+from .utils import Filter, LatLongH, make_lat_lon
+from vipre_data.computations.cart2sph import cart2sph
 
 
 def calculate_magnitudes(cls, values: dict) -> dict:
@@ -18,8 +19,8 @@ def calculate_magnitudes(cls, values: dict) -> dict:
     for field_name in mag_fields:
         root = field_name[:-4]
         try:
-            vectors = [values[f"{root}_{c}"] for c in {"x", "y", "z"}]
-        except AttributeError:
+            vectors = [values[f"{root}_{c}"] for c in "xyz"]
+        except KeyError:
             # Missing x,y,z components for a _mag field is not catastrophic
             continue
         else:
@@ -155,7 +156,15 @@ class Entry(BaseModel):
     vel_entry_y: t.Optional[float]
     vel_entry_z: t.Optional[float]
     vel_entry_mag: t.Optional[float]
+    pos_entry_lat_long_h: t.Optional[LatLongH]
 
+    @root_validator(pre=False)
+    def make_lat_long(cls, values):
+        pos = np.array([[values[f"pos_entry_{c}"]] for c in "xyz"])
+        print("POS", pos)
+        lat_long = make_lat_lon(*cart2sph(*pos))
+        values["pos_entry_lat_long_h"] = lat_long[0]
+        return values
     class Config:
         orm_mode = True
 

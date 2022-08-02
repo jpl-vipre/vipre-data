@@ -2,7 +2,7 @@ import typing as t
 from enum import Enum
 
 from pydantic import BaseModel
-
+import numpy as np
 
 class FilterCategory(str, Enum):
     CHECKBOX = "checkbox"
@@ -16,13 +16,21 @@ class Filter(BaseModel):
     category: FilterCategory = FilterCategory.SLIDER
 
 
+def _vector_filters(desc, name):
+    return [
+        Filter(display_name=f"{desc} [{c.capitalize()}]", field_name=f"{name}_{c}")
+        for c in "xyz"
+    ]
+
+
 # TODO: Add architecture ID?
 TrajectoryFilters: list[Filter] = [
     Filter(display_name="Launch Date", field_name="t_launch"),
     Filter(display_name="Arrival Date", field_name="t_arr"),
-    Filter(display_name="Arrival V Infinity Vector X", field_name="v_inf_arr_x"),
-    Filter(display_name="Arrival V Infinity Vector X", field_name="v_inf_arr_y"),
-    Filter(display_name="Arrival V Infinity Vector X", field_name="v_inf_arr_z"),
+    *_vector_filters("Arrival V Infinity Vector", "v_inf_arr"),
+    *_vector_filters("Earth position at time of arrival", "pos_earth_arr"),
+    *_vector_filters("Spacecraft position at time of arrival", "pos_sc_arr"),
+    *_vector_filters("Target position at time of arrival", "pos_target_arr"),
     Filter(display_name="Launch C3", field_name="c3"),
     Filter(display_name="Total Cruise DeltaV", field_name="dv_total"),
 ]
@@ -33,12 +41,8 @@ EntryFilters: list[Filter] = [
     Filter(display_name="B-Plane vector magnitude", field_name="bvec_mag"),
     Filter(display_name="Safe Entry Trajectory Flag", field_name="safe"),
     Filter(display_name="Time of Entry", field_name="t_entry"),
-    Filter(display_name="Spacecraft Position @ entry X", field_name="pos_entry_x"),
-    Filter(display_name="Spacecraft Position @ entry Y", field_name="pos_entry_y"),
-    Filter(display_name="Spacecraft Position @ entry Z", field_name="pos_entry_z"),
-    Filter(display_name="Spacecraft Velocity @ entry X", field_name="vel_entry_x"),
-    Filter(display_name="Spacecraft Velocity @ entry Y", field_name="vel_entry_y"),
-    Filter(display_name="Spacecraft Velocity @ entry Y", field_name="vel_entry_z"),
+    *_vector_filters("Spacecraft Position @ entry", "pos_entry"),
+    *_vector_filters("Spacecraft Velocity @ entry", "vel_entry"),
     Filter(display_name="Relay Data Volume", field_name="relay_volume"),
 ]
 entry_filter_fields = {f.field_name for f in EntryFilters}
@@ -69,5 +73,34 @@ class ConicParams(BaseModel):
 
     ta_step: int
     mu: float
-    rev_check: bool = 0
-    time_flag: bool = 0
+    rev_check: bool = False
+    time_flag: bool = False
+
+
+def get_xyz_tuple(obj: object, field_name: str) -> np.ndarray:
+    """
+    Create x, y, z tuples from an object based on field name.
+    The object is expected to have attributes with "<field_name>_{x,y,z}".
+
+    :param obj: python object with fields mapping to xyz coordinates ("_x", "_y", "_z")
+    :param field_name: prefix of the fields with xzy coordinates
+    :return: numpy array of shape (1,3,1)
+    """
+    assert all(
+        hasattr(obj, f"{field_name}_{i}") for i in "xyz"
+    ), f"Field: {field_name} does not exist on object: {obj}"
+    return np.array([[[getattr(obj, f"{field_name}_{i}")] for i in "xyz"]])
+
+
+def make_lat_lon(height: np.ndarray, lat: np.ndarray, lon: np.ndarray) -> list[LatLongH]:
+    """
+
+    :param lat:
+    :param lon:
+    :param height:
+
+    :return:
+    """
+    fields = ["height", "latitude", "longitude"]
+    points = np.array([height, lat, lon]).T.reshape(-1, 3)
+    return [LatLongH(**{k: v for k, v in zip(fields, point)}) for point in points]
