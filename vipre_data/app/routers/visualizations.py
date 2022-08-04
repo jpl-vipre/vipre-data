@@ -2,12 +2,12 @@ import numpy as np
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app import dependencies as deps
-from app import schemas
-from app.schemas.utils import get_xyz_tuple, make_lat_lon
-from computations.cart2sph import cart2sph
-from sql import crud, models
-from computations.conic_2point import conic_2point
+from vipre_data.app import dependencies as deps
+from vipre_data.app import schemas
+from vipre_data.app.schemas.utils import get_xyz_tuple, make_lat_lon
+from vipre_data.computations.cart2sph import cart2sph
+from vipre_data.sql import crud, models
+from vipre_data.computations.conic_2point import conic_2point
 
 router = APIRouter(
     prefix="/visualizations",

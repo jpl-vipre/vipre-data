@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app import dependencies as deps
-from app import schemas
-from sql import crud, models
+from vipre_data.app import dependencies as deps
+from vipre_data.app import schemas
+from vipre_data.sql import crud, models
 
 router = APIRouter(
     prefix="/trajectories",

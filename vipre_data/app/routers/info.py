@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from app import schemas
-from sql.models import Entry, Trajectory, get_column_names
+from vipre_data.app import schemas
+from vipre_data.sql.models import Entry, Trajectory, get_column_names
 
 router = APIRouter(
     tags=["info"],

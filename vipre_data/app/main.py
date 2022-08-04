@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.routers import trajectories, entries, info, visualizations, bodies
+from vipre_data.app.routers import trajectories, entries, info, visualizations, bodies
 
 app = FastAPI()
 
