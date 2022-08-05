@@ -5,11 +5,11 @@ description = "Data management for the VIPRE Application"
 authors = ["Michael Fedell <mfedell@jpl.nasa.gov>"]
 
 [tool.poetry.dependencies]
-python = "^3.9,<3.12"
+python = ">=3.9,<3.11"
 SQLAlchemy = "^1.4.31"
 alembic = "^1.7.7"
 fastapi = "^0.75.0"
-uvicorn = {extras = ["standard"], version = "^0.17.6"}
+uvicorn = { extras = ["standard"], version = "^0.17.6" }
 black = "^22.1.0"
 pydantic = "^1.9.0"
 numpy = "^1.22.3"
@@ -17,8 +17,9 @@ numpy = "^1.22.3"
 [tool.poetry.dev-dependencies]
 jupyterlab = "^3.2.9"
 pex = "^2.1.92"
+pyinstaller = "^5.3"
 pandas = "^1.4.3"
-nbconvert = {extras = ["webpdf"], version = "^6.5.0"}
+nbconvert = { extras = ["webpdf"], version = "^6.5.0" }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
