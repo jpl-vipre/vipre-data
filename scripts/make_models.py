@@ -7,7 +7,7 @@ import black
 from jinja2 import Environment, PackageLoader
 
 if __name__ == "__main__":
-    schemas = Path(__file__).parent.parent.parent.resolve() / "schemas" / "models"
+    schemas = Path(__file__).parent.parent.resolve() / "vipre-schemas" / "models"
     print(schemas.absolute())
     models = [json.load(f.open()) for f in schemas.glob("*.json")]
     models.sort(key=lambda x: x["tablename"])

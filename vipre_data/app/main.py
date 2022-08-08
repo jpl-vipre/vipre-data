@@ -2,7 +2,10 @@ from fastapi import FastAPI
 
 from vipre_data.app.routers import trajectories, entries, info, visualizations, bodies
 
-app = FastAPI()
+app = FastAPI(
+    title="VIPRE-data",
+    description="Backend data services for the VIPRE applications",
+)
 
 app.include_router(visualizations.router)
 app.include_router(trajectories.router)

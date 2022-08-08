@@ -25,5 +25,5 @@ poetry run python -m scripts.make_models
 Inspect the differences between newly rendered and currently used models:
 
 ```shell
-diff scripts/rendered.models.py src/sql/models.py
+diff scripts/rendered.models.py vipre_data/sql/models.py
 ```

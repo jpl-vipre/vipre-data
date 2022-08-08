@@ -161,10 +161,10 @@ class Entry(BaseModel):
     @root_validator(pre=False)
     def make_lat_long(cls, values):
         pos = np.array([[values[f"pos_entry_{c}"]] for c in "xyz"])
-        print("POS", pos)
         lat_long = make_lat_lon(*cart2sph(*pos))
         values["pos_entry_lat_long_h"] = lat_long[0]
         return values
+
     class Config:
         orm_mode = True
 
@@ -187,3 +187,6 @@ class EntryFull(Entry):
     pos_target_entry_y: t.Optional[float]
     pos_target_entry_z: t.Optional[float]
     pos_target_entry_mag: t.Optional[float]
+
+    ring_shadow: t.Optional[bool]
+    carrier_orbit: t.Optional[str]

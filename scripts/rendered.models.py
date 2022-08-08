@@ -121,6 +121,14 @@ class Entry(Base):
     relay_volume = Column(
         Float, index=True, nullable=True, doc="Total data volume relayable by entry vehicle."
     )
+    ring_shadow = Column(
+        Boolean, nullable=True, doc="true if the entry is in the shadow of a planet's ring"
+    )
+    carrier_orbit = Column(
+        Text,
+        nullable=True,
+        doc="label describing the pre-divert orbit. Primarily used to distinguish between flyby and orbitting probe releases.",
+    )
 
 
 class Flyby(Base):
