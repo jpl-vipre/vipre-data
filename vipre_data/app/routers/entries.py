@@ -33,7 +33,7 @@ def query_entries(req: schemas.request.EntryRequest, db: Session = Depends(deps.
 #     return result
 
 
-@router.get("/{entry_id}", response_model=schemas.response.Entry)
+@router.get("/{entry_id}", response_model=schemas.response.EntryFull)
 def get_entry(entry_id: int, db: Session = Depends(deps.get_db)):
     result = crud.get_entry(db, entry_id)
     print(result)

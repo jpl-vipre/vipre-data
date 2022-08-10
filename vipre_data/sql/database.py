@@ -5,7 +5,7 @@ import os
 
 this_file = Path(__file__).absolute()
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
-sample = f'sqlite:///{(this_file.parent / "EJS_subset.db").absolute()}'
+sample = f'sqlite:///{(this_file.parent / "E_S_test_big.db").absolute()}'
 SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI", sample)
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI, connect_args={"check_same_thread": False})
