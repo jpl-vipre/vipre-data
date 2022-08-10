@@ -88,6 +88,55 @@ mv ../vipre-api.pex ~/Downloads
 ~/Downloads/vipre-api.pex app.main:app
 ```
 
+<details>
+<summary>PyInstaller on Mac</summary>
+NOTE: I would like to build with PyInstaller on Mac as well, but have been unable to as of yet. PyInstaller fails due to a missing Python Library errors:
+
+```console
+OSError: Python library not found: Python3, libpython3.9.dylib, libpython3.9m.dylib, Python, .Python
+    This means your Python installation does not come with proper shared library files.
+    This usually happens due to missing development package, or unsuitable build parameters of the Python installation.
+
+    * On Debian/Ubuntu, you need to install Python development packages:
+      * apt-get install python3-dev
+      * apt-get install python-dev
+    * If you are building Python by yourself, rebuild with `--enable-shared` (or, `--enable-framework` on macOS).
+```
+
+When I follow this advice and try to rebuild python with `--enable-framework`, I get the following errors:
+
+```console
+$ env PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install 3.9.1
+pyenv: /Users/mfedell/.pyenv/versions/3.9.1 already exists
+continue with installation? (y/N) y
+python-build: use openssl@1.1 from homebrew
+python-build: use readline from homebrew
+Downloading Python-3.9.1.tar.xz...
+-> https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tar.xz
+Installing Python-3.9.1...
+python-build: use readline from homebrew
+python-build: use zlib from xcode sdk
+
+BUILD FAILED (OS X 12.4 using python-build 20180424)
+
+Inspect or clean up the working tree at /var/folders/wv/gltyfn4j6f910j0cydhb2bwc0000gp/T/python-build.20220809182029.52630
+Results logged to /var/folders/wv/gltyfn4j6f910j0cydhb2bwc0000gp/T/python-build.20220809182029.52630.log
+
+Last 10 log lines:
+checking for --with-cxx-main=<compiler>... no
+checking for clang++... no
+configure:
+
+  By default, distutils will build C++ extension modules with "clang++".
+  If this is not intended, then set CXX on the configure command line.
+
+checking for the platform triplet based on compiler characteristics... darwin
+configure: error: internal configure error for the platform triplet, please file a bug report
+make: *** No targets specified and no makefile found.  Stop.
+```
+
+</details>
+
 ### Building with PyInstaller
 
 [See the Docs](https://pyinstaller.org/en/stable/usage.html)
@@ -114,6 +163,27 @@ pyinstaller server.spec -y
 ```
 
 This will by default create a `dist/server/` folder with all the libraries and dependencies needed to run `dist/server/server.exe`. This entire folder can be zipped and distributed for local execution.
+
+<details>
+  <summary>Detailed Windows build instructions</summary>  
+Execute the following from Git-Bash on VirtualBox:
+
+```shell
+cd Documents/vipre-data
+git pull
+python -m venv ./venv
+. venv/Scripts/activate
+# make sure that uvloop is not included in the requirements.txt file
+pip install -r requirements.txt
+pip install pyinstaller
+pip install -e .
+cd vipre_data
+pyinstaller -y server.spec
+```
+</details>
+
+
+
 
 ## Interacting with the Database
 
