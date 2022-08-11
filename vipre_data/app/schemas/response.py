@@ -17,15 +17,17 @@ def calculate_magnitudes(cls, values: dict) -> dict:
     # Assume presence of a "*_mag" field indicates a vector property for which the x, y, z components will exist
     mag_fields = [v for v in values if v.endswith("_mag")]
     for field_name in mag_fields:
-        root = field_name[:-4]
+        root = field_name[:-4]  # Trim off "_mag" to get root name
         try:
             vectors = [values[f"{root}_{c}"] for c in "xyz"]
+            values[field_name] = np.linalg.norm(vectors)
+            # TODO: check for None values (missing vector components)
         except KeyError:
             # Missing x,y,z components for a _mag field is not catastrophic
             continue
-        else:
-            # Successfully calculated the magnitude so safe to write to the field
-            values[field_name] = np.linalg.norm(vectors)
+        except TypeError:
+            # Unable to calculate magnitude, one of the components may be None
+            continue
     return values
 
 
