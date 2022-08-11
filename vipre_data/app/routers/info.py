@@ -36,12 +36,12 @@ def get_fields():
 
 @router.get("/fields/trajectories", response_model=list[str])
 def get_trajectory_fields() -> list[str]:
-    return get_column_names(Trajectory)
+    return list(schemas.response.Trajectory.__fields__)
 
 
 @router.get("/fields/entries", response_model=list[str])
 def get_entry_fields() -> list[str]:
-    return get_column_names(Entry)
+    return list(schemas.response.Entry.__fields__)
 
 
 @router.get("/version")
