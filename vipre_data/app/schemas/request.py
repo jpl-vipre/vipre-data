@@ -32,7 +32,7 @@ Filters = list[t.Union[FilterRangeRequest, FilterCheckboxRequest, FilterValueReq
 class DataRequest(BaseModel):
     filters: Filters
     fields: t.Optional[list[str]]
-    limit: conint(gt=0, le=1000) = 100
+    limit: conint(gt=0, le=10000) = 100
 
 
 class TrajectoryRequest(DataRequest):
