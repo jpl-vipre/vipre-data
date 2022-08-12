@@ -18,4 +18,5 @@ if __name__ == "__main__":
     freeze_support()  # Needed for pyinstaller for multiprocessing on Windows
     # num_workers = int(cpu_count() * 0.5)
     num_workers = 1
-    start_server(num_workers=num_workers)
+    port = int(os.getenv("VIPRE_DATA_PORT", "8463"))
+    start_server(num_workers=num_workers, port=port)
