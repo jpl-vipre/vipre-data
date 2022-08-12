@@ -1,3 +1,5 @@
+from importlib.metadata import version
+
 from fastapi import APIRouter
 
 from vipre_data.app import schemas
@@ -45,5 +47,5 @@ def get_entry_fields() -> list[str]:
 
 
 @router.get("/version")
-def version():
-    return "v0.1.0"
+def get_version():
+    return version("vipre_data")
