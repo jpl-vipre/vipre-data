@@ -1,9 +1,6 @@
-from importlib.metadata import version
-
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
 from vipre_data.app import schemas
-from vipre_data.sql.models import Entry, Trajectory, get_column_names
 
 router = APIRouter(
     tags=["info"],
@@ -47,5 +44,5 @@ def get_entry_fields() -> list[str]:
 
 
 @router.get("/version")
-def get_version():
-    return version("vipre_data")
+def get_version(request: Request):
+    return request.app.version

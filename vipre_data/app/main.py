@@ -1,3 +1,5 @@
+from importlib.metadata import version
+
 from fastapi import FastAPI
 
 from vipre_data.app.routers import trajectories, entries, info, visualizations, bodies
@@ -5,6 +7,7 @@ from vipre_data.app.routers import trajectories, entries, info, visualizations, 
 app = FastAPI(
     title="VIPRE-data",
     description="Backend data services for the VIPRE applications",
+    version=version("vipre_data"),
 )
 
 app.include_router(visualizations.router)
