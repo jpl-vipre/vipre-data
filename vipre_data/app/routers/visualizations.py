@@ -17,7 +17,7 @@ router = APIRouter(
 
 @router.post(
     "/trajectory_selection/{target_body_id}",
-    response_model=list[schemas.response.TrajectorySummary],
+    response_model=list[schemas.response.Trajectory],
 )
 def trajectory_selection(
     target_body_id: int, req: schemas.request.TrajectoryRequest, db: Session = Depends(deps.get_db)
