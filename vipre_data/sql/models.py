@@ -111,6 +111,9 @@ class Entry(Base):
         index=True,
         doc="z component of spacecraft relative entry velocity at time of entry [km/s]",
     )
+    flight_path_angle = Column(
+        Float, index=True, nullable=True, doc="flight path angle at point of entry"
+    )
     pos_sun_entry_x = Column(Float, doc="x component of sun position at time of entry [km]")
     pos_sun_entry_y = Column(Float, doc="y component of sun position at time of entry [km]")
     pos_sun_entry_z = Column(Float, doc="z component of sun position at time of entry [km]")
@@ -122,6 +125,14 @@ class Entry(Base):
     pos_target_entry_z = Column(Float, doc="z component of target position at time of entry [km]")
     relay_volume = Column(
         Float, index=True, nullable=True, doc="Total data volume relayable by entry vehicle."
+    )
+    ring_shadow = Column(
+        Boolean, nullable=True, doc="true if the entry is in the shadow of a planet's ring"
+    )
+    carrier_orbit = Column(
+        Text,
+        nullable=True,
+        doc="label describing the pre-divert orbit. Primarily used to distinguish between flyby and orbitting probe releases.",
     )
 
 

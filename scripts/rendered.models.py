@@ -109,6 +109,9 @@ class Entry(Base):
         index=True,
         doc="z component of spacecraft relative entry velocity at time of entry [km/s]",
     )
+    flight_path_angle = Column(
+        Float, index=True, nullable=True, doc="flight path angle at point of entry"
+    )
     pos_sun_entry_x = Column(Float, doc="x component of sun position at time of entry [km]")
     pos_sun_entry_y = Column(Float, doc="y component of sun position at time of entry [km]")
     pos_sun_entry_z = Column(Float, doc="z component of sun position at time of entry [km]")

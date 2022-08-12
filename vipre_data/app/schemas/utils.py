@@ -4,6 +4,7 @@ from enum import Enum
 from pydantic import BaseModel
 import numpy as np
 
+
 class FilterCategory(str, Enum):
     CHECKBOX = "checkbox"
     VALUE = "value"
@@ -18,8 +19,7 @@ class Filter(BaseModel):
 
 def _vector_filters(desc, name):
     return [
-        Filter(display_name=f"{desc} [{c.capitalize()}]", field_name=f"{name}_{c}")
-        for c in "xyz"
+        Filter(display_name=f"{desc} [{c.capitalize()}]", field_name=f"{name}_{c}") for c in "xyz"
     ]
 
 
@@ -44,6 +44,7 @@ EntryFilters: list[Filter] = [
     *_vector_filters("Spacecraft Position @ entry", "pos_entry"),
     *_vector_filters("Spacecraft Velocity @ entry", "vel_entry"),
     Filter(display_name="Relay Data Volume", field_name="relay_volume"),
+    Filter(display_name="Flight Path Angle", field_name="flight_path_angle"),
 ]
 entry_filter_fields = {f.field_name for f in EntryFilters}
 
