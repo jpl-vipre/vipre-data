@@ -1,94 +1,193 @@
 # VIPRE Data
 
-This project will handle data management for the VIPRE Application, including data models, ingestion scripts, and any ad-hoc processing/exploration that needs to be performed.
+This project will handle data management for the VIPRE Application, including data models, ingestion
+scripts, and any
+ad-hoc processing/exploration that needs to be performed.
 
-## Data Fields
-
-Fields extracted from directory/file structure:
-
-```text
-body
-hEntry
-vID
-```
-
-Fields from the trajectory header:
+## Contents
 
 ```text
-Bvec-theta(rad)
-Bvec-abs(km)
-entryTrajec(boolean)
-stateEqu-rX(km)
-stateEqu-rY(km)
-stateEqu-rZ(km)
-stateEqu-vX(km/s)
-stateEqu-vY(km/s)
-stateEqu-vZ(km/s)
-safe(boolean)
-entryState-rX(km)
-entryState-rY(km)
-entryState-rZ(km)
-entryState-vX(km/s)
-entryState-vY(km/s)
-entryState-vZ(km/s)
-lon_entry(rad)
-lat_entry(rad)
-vRot-x(km/s)
-vRot-y(km/s)
-vRot-z(km/s)
-FPA(rad)
-vRel_entry-x(km/s)
-vRel_entry-y(km/s)
-vRel_entry-z(km/s)
-```
-
-Fields from the Body.csv trip parameter headers:
-
-```text
-launch (days past J2000)
-arrive (days past J2000)
-Vinfinity (km/s EMO2000)
-y (inferred)
-z (inferred)
-planet pos (km EMO2000)
-y (inferred)
-z (inferred)
-planet vel (km/s EMO2000)
-y (inferred)
-z (inferred)
-C3 (km2/s2)
-DeltaV (km/s)
-arrival mass (kg Falcon H Rec + biprop)
-flyby body
-days past J2000
-```
-
-## Data Files
-
-```text
-$ tree -L 3
 .
-├── README.md
-├── data
-│	├── Neptune
-│	│   ├── 00700
-│	│   └── 00750
-│	│	    ├── Neptune00700-vID1.txt
-│	│	    └── ...
-│	├── Neptune.csv
-│	├── Saturn
-│	│	├── 00700
-│	│	└── 00750
-│	├── Saturn.csv
-│	├── Uranus
-│	│	├── 00700
-│	│	└── 00750
-│	└── Uranus.csv
-├── data.zip
-├── poetry.lock
-├── pyproject.toml
-└── src
-    ├── __init__.py
-    ├── ingest.py
-    └── models.py
+├── README.md                       This file
+├── data/                           Collection of seed data for development and testing
+├── docs/                           Documentation for the design and development of this application
+│     ├── ERD.drawio                Entity Relationship Diagram capturing the data model's relationships
+│     ├── ERD.png
+│     ├── backend_service.md        Notes on the design of the backend data service
+│     ├── draft_er.png              Archive
+│     ├── example_tables.png        Example of some data tables in spreadsheet format
+│     ├── old_data_dictionary.md    Archive
+│     └── sample_table_data.xlsx    Example of some data tables in spreadsheet format
+├── notebooks/                      Notebooks for ad-hoc processing or data exploration
+├── pyproject.toml                  Configuration for the project - managed by `poetry`
+├── schemas/                        Data schemas in static text files
+│     ├── vipre_schema-*.csv        Exported from a shared google sheet where the data model was developed
+│     └── vipre_schema-*.json       Converted from csvs to provide easily parsable schema to various consumers
+├── scripts/
+│     └── make_schemas.py           Converts the csv files found in schemas/ to the json format with metadata
+├── src/                            Source code for the application
+│     ├── alembic/                  Configuration and versions for database migrations - managed by `alembic` 
+│     ├── alembic.ini               Configuration for the alembic tool
+│     ├── app/                      FastAPI Python application
+│     │     ├── dependencies.py     Global dependencies used across the API
+│     │     ├── main.py             Main FastAPI application and top-level utility routes
+│     │     ├── routers/            Collection of routers that service the primary application routes 
+│     │     └── schemas.py          Schema objects that define request/response models
+│     ├── database.db               SQLite database for development and testing
+│     ├── init-db.sql               SQL schema export from the sqlalchemy/alembic managed database; kept for portability
+│     └── sql/
+│         ├── database.py           Manages database connections and utilities
+│         └── models.py             Defines the data models using the sqlalchemy ORM 
 ```
+
+## Running the Application
+
+This project uses `poetry` for dependency and environment management. See
+the [Poetry Introduction docs](https://python-poetry.org/docs/) to learn more.
+
+To get started run:
+
+```shell
+poetry install
+```
+
+Once your environment has been initialized with the proper packages, you can bring up the API REST
+server with:
+
+```shell
+cd src/
+poetry run uvicorn --reload --log-level debug app.main:app
+```
+
+## Building for Distribution
+
+This project uses two separate build tools for generating the distribution files for unix and
+Windows systems. First, `pex` was explored for generating a standalone executable file. This is a
+single file which can be passed around and run independently of location/path on system. It was
+later discovered that pex cannot build Windows exe files and thus a new tool was also
+incorporated: `pyinstaller`. Even so, the Windows executable still must be built **on a Windows
+device** which is currently done manually via VirtualBox.
+
+### Building with PyInstaller
+
+[See the Docs](https://pyinstaller.org/en/stable/usage.html)
+
+PyInstaller also must be installed in the active environment (it is already included in the
+pyproject.toml). The build command relies on a spec file which was first generated by PyInstaller
+and then modified after. Once this spec file is generated and present (it is version controlled with
+this repo), builds can be rolled out quite simply.
+
+To generate the server.spec file that controls subsequent builds, run:
+
+```shell
+pyinstaller server.py --collect-all vipre_data
+```
+
+To create a new build, run:
+
+```shell
+pyinstaller server.spec -y
+```
+
+This will by default create a `dist/server/` folder with all the libraries and dependencies needed
+to run `dist/server/server.exe`. This entire folder can be zipped and distributed for local
+execution.
+
+> Note, the above commands assume an active environment. These are typically run on the Windows
+> builder where poetry has been swapped out for a simpler python-venv based environment (python -m
+> venv venv)
+
+> PyInstaller requires a framework build of Python; if you do not have this (PyInstaller will emit
+> errors), you can build it with `pyenv`. Make sure you are running the latest version of `pyenv` or
+> you ay run into build errors similar
+> to [Issue #12](https://github.jpl.nasa.gov/VIPRE/vipre-data/issues/12)
+
+<details>
+  <summary>Detailed Windows build instructions</summary>  
+Execute the following from Git-Bash on VirtualBox:
+
+```shell
+cd Documents/vipre-data
+git pull
+python -m venv ./venv
+. venv/Scripts/activate
+# make sure that uvloop is not included in the requirements.txt file
+pip install -r requirements.txt
+pip install pyinstaller
+pip install -e .
+cd vipre_data
+pyinstaller -y server.spec
+```
+
+</details>
+
+## Interacting with the Database
+
+The database is managed by a collection of tools. The schemas are defined in `vipre-schemas` which
+are used to write
+the `sqlalchemy` ORM models. These models are in turn read by the `alembic` migration tool which
+creates migrations
+in `alembic/versions/` to reflect the changes to those models. `alembic` is also used to connect to
+the database and
+execute those migrations when appropriate.
+
+Interaction with the database relies on an initialized and active python environment
+
+```shell
+poetry install
+poetry shell
+```
+
+For more information on these tools see the following docs:
+
+- [SQLAlchemy Models](https://docs.sqlalchemy.org/en/14/orm/tutorial.html)
+- [SQLAlchemy Database Connections](https://docs.sqlalchemy.org/en/14/core/engines.html)
+- [Sqlite3](https://www.sqlite.org/quickstart.html)
+- [Alembic](https://alembic.sqlalchemy.org/en/latest/front.html)
+
+Currently, the MatLab process (`vipre-gen`) performs all writes to the database and thus frequently
+needs to create the
+database as well. This is easily done by exporting a sql init script. This can be done directly with
+alembic by
+running `alembic upgrade head --sql` for an initial migration, or by connecting to the database
+with `sqlite` and
+running `.schema`. Examples are shown below.
+
+> **NOTE**: be sure to check the autogenerated revision file before executing the `upgrade` command
+
+Dump the current database schema (whatever is in `database.db`)
+
+```shell
+alembic revision --autogenerate "[revision message]"
+alembic upgrade head
+sqlite3 database.db ".schema" > init-db.sql
+```
+
+Use alembic to generate an initial schema and a corresponding init-db.sql file
+
+```shell
+alembic revision --autogenerate "Generate schema"
+alembic upgrade head --sql > init-db.sql
+```
+
+Use alembic to generate a migration, upgrade the current database, and output the schema to an
+init-db.sql file
+
+```shell
+alembic revision --autogenerate "[revision message]"
+alembic upgrade head
+sqlite3 database.db ".schema" > init-db.sql
+```
+
+**NOTE**: Since sqlite is being used at this phase, migrations are not all that important and it is
+sometimes easier to
+wipe the database and revision history to start from scratch. This can be done with the following:
+
+```shell
+cd src
+rm -rf alembic/versions/*
+rm -f database.db
+alembic revision --autogenerate "Generate schema"
+alembic upgrade head --sql > init-db.sql
+```
+

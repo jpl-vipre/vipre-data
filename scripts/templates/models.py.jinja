@@ -1,0 +1,47 @@
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, Text, Float, inspect, exc
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
+
+Base = declarative_base()
+
+def get_column_names(model: Base) -> list[str]:
+    mapper = inspect(model)
+    try:
+        columns = mapper.columns
+        return [c.name for c in columns]
+    except exc.NoInspectionAvailable:
+        # TODO: log failure
+        return []
+
+
+{% for model in models %}
+class {{ model.model_name or model.tablename | title }}(Base):
+    # Identity
+    __tablename__ = "{{ model.tablename | lower }}"
+
+    # Relationships
+    {% for relationship in model.relationships %}
+        {{- relationship.relationship_name }} = relationship(
+            "{{ relationship.model_name }}",
+        {%- if relationship.back_populates -%}
+            back_populates="{{ relationship.back_populates }}",
+        {% endif %}
+        {%- if relationship.order_by -%}
+            order_by="{{ relationship.order_by }}",
+        {% endif %}
+        )
+    {% endfor %}
+
+    # Fields
+    {% for field in model.fields %}
+    {{- field.field_name }} = Column(
+        {{- field.sql_datatype | title -}},
+        {%- if field.primary_key -%}primary_key=True, autoincrement=True,{% endif %}
+        {%- if field.foreign_key -%}ForeignKey("{{ field.foreign_key }}"),{% endif %}
+        {%- if field.indexed or field.primary_key or field.foreign_key -%}index=True,{% endif %}
+        {%- if field.nullable -%}nullable=True,{% endif %}
+        {%- if field.description -%}doc="{{ field.description }}",{% endif %}
+    )
+    {% endfor %}
+
+{% endfor %}
