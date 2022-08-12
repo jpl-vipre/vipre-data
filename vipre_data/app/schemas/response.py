@@ -162,6 +162,8 @@ class Entry(BaseModel):
     pos_entry_longitude: t.Optional[float]
     pos_entry_height: t.Optional[float]
 
+    flight_path_angle: t.Optional[float]
+
     @root_validator(pre=False)
     def make_lat_long(cls, values):
         pos = np.array([[values[f"pos_entry_{c}"]] for c in "xyz"])
