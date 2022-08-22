@@ -2,7 +2,7 @@ import numpy as np
 from numpy import linalg as la
 
 def planet_rotation_velocity(R,period):
-	# Compute planetary rotation velocity in body frame at specified position. Add this to V_entry to get relative velocity in planet atmosphere or on surface
+	# Compute planetary rotation velocity in body frame at specified position. Subtract this from V_entry to get relative velocity in planet atmosphere or on surface
 
 	# inputs:
 	#    R: position on planet, column vectors
