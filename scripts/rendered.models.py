@@ -1,3 +1,5 @@
+from typing import Type
+
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, Text, Float, inspect, exc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -5,7 +7,7 @@ from sqlalchemy.orm import relationship
 Base = declarative_base()
 
 
-def get_column_names(model: Base) -> list[str]:
+def get_column_names(model: Type[Base]) -> list[str]:
     mapper = inspect(model)
     try:
         columns = mapper.columns
@@ -54,6 +56,27 @@ class Body(Base):
     pole_vec_z = Column(
         Float, doc="z component of body spin pole unit vector represented in EMO2000 frame"
     )
+
+
+class Datarate(Base):
+    # Identity
+    __tablename__ = "datarate"
+
+    # Relationships
+    entry = relationship("Entry", back_populates="datarates")
+
+    # Fields
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    entry_id = Column(
+        Integer, ForeignKey("entry.id"), index=True, doc="ID of the parent Entry row in database"
+    )
+    order = Column(Integer, index=True, doc="Order of this tuple in the datarate time series")
+    time = Column(
+        Integer,
+        nullable=True,
+        doc="Downsampled time in datarate time series. Time is seconds after entry",
+    )
+    rate = Column(Float, nullable=True, doc="Downsampled datarate in datarate time series")
 
 
 class Entry(Base):

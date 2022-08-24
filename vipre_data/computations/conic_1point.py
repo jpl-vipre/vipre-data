@@ -2,7 +2,7 @@ import numpy as np
 from numpy import linalg as la
 
 
-def conic_2point(r_1,v_1,t_1,ta_step,mu,rev_check,time_flag) -> float:
+def conic_1point(r_1,v_1,t_1,ta_step,mu,rev_check,time_flag) -> float:
 	"""
 	Compute an array of N points along a conic orbit from one postion of the trajectory. 
 	Input vectors and arrays of vectors are expected as 3xN np.arrays where rows are x,y,z 

@@ -58,6 +58,27 @@ class Body(Base):
     )
 
 
+class Datarate(Base):
+    # Identity
+    __tablename__ = "datarate"
+
+    # Relationships
+    entry = relationship("Entry", back_populates="datarates")
+
+    # Fields
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    entry_id = Column(
+        Integer, ForeignKey("entry.id"), index=True, doc="ID of the parent Entry row in database"
+    )
+    order = Column(Integer, index=True, doc="Order of this tuple in the datarate time series")
+    time = Column(
+        Integer,
+        nullable=True,
+        doc="Downsampled time in datarate time series. Time is seconds after entry",
+    )
+    rate = Column(Float, nullable=True, doc="Downsampled datarate in datarate time series")
+
+
 class Entry(Base):
     # Identity
     __tablename__ = "entry"
