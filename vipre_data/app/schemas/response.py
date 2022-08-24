@@ -1,9 +1,9 @@
 import typing as t
 
-from pydantic import BaseModel as PydanticBaseModel, validator, root_validator
+from pydantic import BaseModel, validator, root_validator
 import numpy as np
 
-from .utils import Filter, LatLongH, make_lat_lon
+from .utils import Filter, LatLongH, make_lat_long
 from vipre_data.computations.cart2sph import cart2sph
 
 
@@ -31,7 +31,7 @@ def calculate_magnitudes(cls, values: dict) -> dict:
     return values
 
 
-class BaseModel(PydanticBaseModel):
+class DbModelBase(BaseModel):
     _calculate_magnitudes = root_validator(allow_reuse=True, pre=False)(calculate_magnitudes)
 
 
@@ -45,7 +45,12 @@ class FiltersResponse(BaseModel):
     EntryFilters: list[Filter]
 
 
-class BodySummary(BaseModel):
+class TrajectoryArcs(BaseModel):
+    carrier: list[LatLongH]
+    probe: list[LatLongH]
+
+
+class BodySummary(DbModelBase):
     id: t.Optional[int]
     name: t.Optional[str]
 
@@ -63,14 +68,14 @@ class Body(BodySummary):
     pole_vec_z: float
 
 
-class Architecture(BaseModel):
+class Architecture(DbModelBase):
     sequence: t.Optional[str]
 
     class Config:
         orm_mode = True
 
 
-class Maneuver(BaseModel):
+class Maneuver(DbModelBase):
     id: t.Optional[int]
     maneuver_type: t.Optional[str]
     dv_maneuver: t.Optional[float]
@@ -79,14 +84,14 @@ class Maneuver(BaseModel):
         orm_mode = True
 
 
-class Occultation(BaseModel):
+class Occultation(DbModelBase):
     id: t.Optional[int]
 
     class Config:
         orm_mode = True
 
 
-class Flyby(BaseModel):
+class Flyby(DbModelBase):
     flyby_body: Body
     order: int
     t_flyby: float
@@ -95,7 +100,7 @@ class Flyby(BaseModel):
         orm_mode = True
 
 
-class TrajectorySummary(BaseModel):
+class TrajectorySummary(DbModelBase):
     id: t.Optional[int]
 
     t_launch: t.Optional[float]
@@ -138,7 +143,7 @@ class TrajectoryFull(Trajectory):
     flybys: t.Optional[list[Flyby]]
 
 
-class Entry(BaseModel):
+class Entry(DbModelBase):
     id: t.Optional[int]
 
     target_body: t.Optional[Body]
@@ -167,7 +172,7 @@ class Entry(BaseModel):
     @root_validator(pre=False)
     def make_lat_long(cls, values):
         pos = np.array([[values[f"pos_entry_{c}"]] for c in "xyz"])
-        lat_long = make_lat_lon(*cart2sph(*pos))[0]
+        lat_long = make_lat_long(*cart2sph(*pos))[0]
         for i, c in enumerate(["latitude", "longitude", "height"]):
             values[f"pos_entry_{c}"] = lat_long.dict()[c]
         return values

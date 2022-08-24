@@ -93,7 +93,7 @@ def get_xyz_tuple(obj: object, field_name: str) -> np.ndarray:
     return np.array([[[getattr(obj, f"{field_name}_{i}")] for i in "xyz"]])
 
 
-def make_lat_lon(height: np.ndarray, lat: np.ndarray, lon: np.ndarray) -> list[LatLongH]:
+def make_lat_long(height: np.ndarray, lat: np.ndarray, lon: np.ndarray) -> list[LatLongH]:
     """
 
     :param lat:
