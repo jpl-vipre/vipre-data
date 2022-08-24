@@ -2,7 +2,7 @@ import numpy as np
 from numpy import linalg as la
 
 
-def conic_1point(r_1,v_1,t_1,ta_step,mu,rev_check,time_flag) -> float:
+def conic_1point(r_1,v_1,t_1,ta_step,mu,time_flag) -> float:
 	"""
 	Compute an array of N points along a conic orbit from one postion of the trajectory. 
 	Input vectors and arrays of vectors are expected as 3xN np.arrays where rows are x,y,z 
@@ -14,7 +14,6 @@ def conic_1point(r_1,v_1,t_1,ta_step,mu,rev_check,time_flag) -> float:
 	t_i: time i [days past high noon 1/1/2000]. Unused if not performing revolution check
 	ta_step: true anomaly angular step count
 	mu: gravity constant of central body [km3/s2]
-	rev_check: flag indicating whether or not to check for multiple
 	revolutions based on input time. 1 to toggle on
 	time_flag: flag indication whether or not to compute the time at each
 	orbit point. 1 to toggle on
@@ -95,7 +94,7 @@ def conic_1point(r_1,v_1,t_1,ta_step,mu,rev_check,time_flag) -> float:
 	sma=-mu/(2.*energy)#semi major axis
 	ecc=np.sqrt(1.+(2.*energy*la.norm(h,axis=1)**2)/mu**2)#eccentricity
 	ta_1=get_true_anomaly(p,ecc,r_1,v_1)#true anomaly for point 1
-	ta_2=deg2rad(15.)*np.ones(np.shape(ta_1)#get_true_anomaly(p,ecc,r_2,v_2)#true anomaly for point 2
+	ta_2=2.*np.pi*15./180.*np.ones(np.shape(ta_1))#get_true_anomaly(p,ecc,r_2,v_2)#true anomaly for point 2
 	inc=np.arccos(h_hat.T[0][2])[None].T#inclination
 	th=np.arctan2(r_hat.T[0][2],th_hat.T[0][2])[None].T#orbit angle
 	raan=np.arctan2(h_hat.T[0][0],-h_hat.T[0][1])[None].T#right ascension of ascending node
@@ -110,10 +109,10 @@ def conic_1point(r_1,v_1,t_1,ta_step,mu,rev_check,time_flag) -> float:
 	ell_ind=np.where(ecc<1.)#identifty elliptical cases
 	period=np.zeros(np.shape(ta))
 	revs=np.zeros(np.shape(ta))
-	if rev_check and len(ell_ind)>0:#count total number of orbits if specified
-		period[ell_ind]=2.*np.pi*np.sqrt(sma[ell_ind]**3/mu)#orbit period
-		revs[ell_ind]=np.floor((t_2[ell_ind]\
-			-t_1[ell_ind])*86400./period[ell_ind])#count revolutions based on time difference
+	# if rev_check and len(ell_ind)>0:#count total number of orbits if specified
+	# 	period[ell_ind]=2.*np.pi*np.sqrt(sma[ell_ind]**3/mu)#orbit period
+	# 	revs[ell_ind]=np.floor((t_2[ell_ind]\
+	# 		-t_1[ell_ind])*86400./period[ell_ind])#count revolutions based on time difference
 
 	(E,P,H)=kep2cart_array(raan,aop,inc)#conversion unit vectors from keplerian elements to cartesian
 	ta_set=np.linspace(np.zeros(np.shape(ta)),ta\
