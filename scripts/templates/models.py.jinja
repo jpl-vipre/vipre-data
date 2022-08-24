@@ -2,7 +2,10 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, Text, Float, inspec
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
+VERSION = "{{ version }}"
+
 Base = declarative_base()
+
 
 def get_column_names(model: Base) -> list[str]:
     mapper = inspect(model)

@@ -1,6 +1,12 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends
+from fastapi import Request
+from sqlalchemy import inspect
+from sqlalchemy.engine import Engine, reflection
+from sqlalchemy.orm import Session
 
 from vipre_data.app import schemas
+from vipre_data.app.dependencies import get_db
+from vipre_data.sql.models import VERSION as DATABASE_VERSION
 
 router = APIRouter(
     tags=["info"],
@@ -46,3 +52,30 @@ def get_entry_fields() -> list[str]:
 @router.get("/version")
 def get_version(request: Request):
     return request.app.version
+
+
+@router.get("/database", response_model=schemas.response.DbInfo)
+def get_database_info(db: Session = Depends(get_db)):
+    """Fetch information about the connected database"""
+    engine: Engine = db.get_bind()
+    return {
+        "database": engine.url.database,
+        "tables": engine.table_names(),
+        "schema_version": DATABASE_VERSION,
+    }
+
+
+@router.get("/database/tables", response_model=list[str])
+def get_database_tables(db: Session = Depends(get_db)) -> list[str]:
+    """Fetch tables in the database"""
+    engine: Engine = db.get_bind()
+    return engine.table_names()
+
+
+@router.get("/database/columns/{tablename}", response_model=list[str])
+def get_table_columns(tablename: str, db: Session = Depends(get_db)) -> list[str]:
+    """Fetch all column names in the database for a specified table"""
+    engine: Engine = db.get_bind()
+    inspection: reflection.Inspector = inspect(engine)
+    columns = inspection.get_columns(tablename)
+    return [c["name"] for c in columns]

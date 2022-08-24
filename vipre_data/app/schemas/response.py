@@ -45,6 +45,12 @@ class FiltersResponse(BaseModel):
     EntryFilters: list[Filter]
 
 
+class DbInfo(PydanticBaseModel):
+    database: str
+    tables: list[str]
+    schema_version: str
+
+
 class BodySummary(BaseModel):
     id: t.Optional[int]
     name: t.Optional[str]

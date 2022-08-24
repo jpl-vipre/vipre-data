@@ -2,6 +2,8 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, Text, Float, inspec
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
+VERSION = "0.3.1"
+
 Base = declarative_base()
 
 
@@ -54,6 +56,27 @@ class Body(Base):
     pole_vec_z = Column(
         Float, doc="z component of body spin pole unit vector represented in EMO2000 frame"
     )
+
+
+class Datarate(Base):
+    # Identity
+    __tablename__ = "datarate"
+
+    # Relationships
+    entry = relationship("Entry", back_populates="datarates")
+
+    # Fields
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    entry_id = Column(
+        Integer, ForeignKey("entry.id"), index=True, doc="ID of the parent Entry row in database"
+    )
+    order = Column(Integer, index=True, doc="Order of this tuple in the datarate time series")
+    time = Column(
+        Integer,
+        nullable=True,
+        doc="Downsampled time in datarate time series. Time is seconds after entry",
+    )
+    rate = Column(Float, nullable=True, doc="Downsampled datarate in datarate time series")
 
 
 class Entry(Base):
