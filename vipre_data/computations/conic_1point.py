@@ -1,86 +1,28 @@
+from typing import Tuple, Any
+
 import numpy as np
-from numpy import linalg as la
+from numpy import linalg as la, ndarray
 
 
-def conic_1point(r_1, v_1, t_1, ta_step, mu, time_flag) -> float:
+def conic_1point(
+    r_1, v_1, t_1, ta_step, mu, rev_check, time_flag
+) -> tuple[ndarray, ndarray, ndarray]:
     """
-    Compute an array of N points along a conic orbit from one postion of the trajectory.
+    Compute an array of N points along a conic orbit between two postions of the trajectory.
     Input vectors and arrays of vectors are expected as 3xN np.arrays where rows are x,y,z
     components and N is the number of array entries.
-
-    :inputs:
-    r_i: sun centered position at time i [km]
-    v_i: conic velocity at time i[km/s]
-    t_i: time i [days past high noon 1/1/2000]. Unused if not performing revolution check
-    ta_step: true anomaly angular step count
-    mu: gravity constant of central body [km3/s2]
-    revolutions based on input time. 1 to toggle on
-    time_flag: flag indication whether or not to compute the time at each
-    orbit point. 1 to toggle on
+    :param r_1: sun centered position at time 1 [km]
+    :param v_1: conic velocity at time 1 [km/s]
+    :param t_1: time 1 [seconds past high noon 1/1/2000]. Unused if not performing revolution check
+    :param ta_step: true anomaly angular step count
+    :param mu: gravity constant of central body [km3/s2]
+    :param rev_check: flag indicating whether to check for multiple revolutions based on input time. 1 to toggle on
+    :param time_flag: flag indication whether to compute the time at each orbit point. 1 to toggle on
     :return:
-    pos_set: position vector along trajectory in ta_step evenly spaced true anomaly steps
-    vel_set: velocity vector along trajectory in ta_step evenlyspaced true anomaly steps
-    time_set: time vector along trajectory in ta_step evenly spaced true anomaly steps. Must be specified in call
-
-    Example inputs 1:
-    ta_step=15
-    mu=37931206.1590105
-    r_1=np.array([[[-52570775.9381423],[-48053033.8464909],[-18714087.8322127]]])
-    r_2=np.array([[[-5244.70404103397],[-28361.2929499602],[-54124.8468055892]]])
-    rev_check=1
-    t_1=np.array([[13701.5]])
-    t_2=np.array([[13801.5]])
-    time_flag=1
-    v_1=np.array([[[5.92245272612931],[5.41349858784282],[2.08599922052923]]])
-    v_2=np.array([[[-6.2516040802002],[5.34768724441528],[0.149426251649857]]])
-
-    Example outputs 1:
-    pos_set=[[[-5.25707759e+07 -1.21673667e+06 -5.31592774e+05 -3.07759404e+05
-    -1.99866707e+05 -1.37785365e+05 -9.81666234e+04 -7.10857609e+04
-    -5.16421229e+04 -3.71548327e+04 -2.60432933e+04 -1.73206216e+04
-    -1.03420092e+04 -4.67031830e+03 -9.45874490e-10]] --->x position
-
-    [[-4.80530338e+07 -1.11217472e+06 -4.85909617e+05 -2.81311676e+05
-    -1.82690886e+05 -1.25944590e+05 -8.97305393e+04 -6.49769081e+04
-    -4.72041859e+04 -3.39618809e+04 -2.38052270e+04 -1.58321501e+04
-    -9.45325434e+03 -4.26896806e+03  3.03475645e-08]] ---y position
-
-    [[-1.87140878e+07 -6.03207544e+05 -3.43148505e+05 -2.49076994e+05
-    -1.98398914e+05 -1.65776165e+05 -1.42541635e+05 -1.24881780e+05
-    -1.10836482e+05 -9.92852651e+04 -8.95360511e+04 -8.11354197e+04
-    -7.37722072e+04 -6.72247139e+04 -6.13300000e+04]]] ---z position
-
-    vel_set=[[[ 5.92245273  7.50255478  9.02927236 10.48916923 11.86939726
-    13.15780942 14.34306677 15.41473819 16.36339218 17.18067991
-    17.85940865 18.39360511 18.77856795 19.01090924 19.08858421]] --->x velocity
-
-    [[ 5.41349859  6.8578124   8.25332939  9.58776802 10.84938424
-    12.02707493 13.11047556 14.09005141 14.95718152 15.7042345
-    16.32463575 16.8129253  17.16480583 17.37718055 17.44818041]] --->y velocity
-
-    [[ 2.08599922  2.75728912  3.62623146  4.68517891  5.92481198
-    7.33422099  8.90100212 10.61136658 12.4502619  14.40150449
-    16.447922   18.57150447 20.75356284 22.97489341 25.21594688]]] --->z velocity
-
-    time_set=[[[13701.5        13799.97685882 13800.95895667 13801.22754334
-    13801.34002581 13801.39770096 13801.43114571 13801.4522512
-    13801.46643116 13801.47643514 13801.48377758 13801.48934696
-    13801.49369156 13801.49716419 13801.5       ]]]
-
-    Example inputs 2:
-    ta_step=12
-    mu=132712440041.279
-    r_1=np.array([[[-490781577.445248],[665883634.267565],[8483597.29825115]],[[-507338731.981395],[662408807.107071],[9041504.31209764]],[[-52570775.9381423],[-48053033.8464909],[-18714087.8322127]]])
-    r_2=np.array([[[-1272998893.0951],[556745185.1877],[41012437.6064022]],[[-1284198529.59937],[533637648.158208],[41859341.5064153]],[[-5244.70404103397],[-28361.2929499602],[-54124.8468055892]]])
-    rev_check=1
-    t_1=np.array([[13079.7579005001],[13103.0297838546],[13701.5]])
-    t_2=np.array([[13771.5],[13801.5],[13801.5]])
-    time_flag=1
-    v_1=np.array([[[-15.98380387215],[0.854676233590379],[0.614597010939183]],[[-15.8104622005541],[0.487581744461126],[0.6163084862148]],[[5.92245272612931],[5.41349858784282],[2.08599922052923]]])
-    v_2=np.array([[[-10.739749897275],[-3.33432341479318],[0.476430938814154]],[[-10.4910612381906],[-3.60317735118423],[0.474128964364346]],[[-6.2516040802002],[5.34768724441528],[0.149426251649857]]])
-
-    Example outsputs 2 exclude for brevity. X,Y,Z components will be stacked in pos, vel arrays as [[[X1],[X2],[X3]],[[Y1],[Y2],[Y3]],[[Z1],[Z2],[Z3]]]
-
+        pos_set: position vector along trajectory in ta_step evenly spaced true anomaly steps
+        vel_set: velocity vector along trajectory in ta_step evenlyspaced true anomaly steps
+        time_set: time vector along trajectory in ta_step evenly spaced true anomaly steps. Must be specified in call
+    See conic_2point for example use
     """
 
     # conic geometry
@@ -108,13 +50,14 @@ def conic_1point(r_1, v_1, t_1, ta_step, mu, time_flag) -> float:
     if len(wrap_ind) > 0:
         ta[wrap_ind] = ta_2[wrap_ind] - ta_1[wrap_ind] + 2.0 * np.pi  # perform rotation wrapping
 
-    ell_ind = np.where(ecc < 1.0)  # identifty elliptical cases
+    ell_ind = np.where(ecc < 1.0)  # identify elliptical cases
     period = np.zeros(np.shape(ta))
     revs = np.zeros(np.shape(ta))
-    # if rev_check and len(ell_ind)>0:#count total number of orbits if specified
-    # 	period[ell_ind]=2.*np.pi*np.sqrt(sma[ell_ind]**3/mu)#orbit period
-    # 	revs[ell_ind]=np.floor((t_2[ell_ind]\
-    # 		-t_1[ell_ind])*86400./period[ell_ind])#count revolutions based on time difference
+    # if rev_check and len(ell_ind) > 0:  # count total number of orbits if specified
+    #     period[ell_ind] = 2.0 * np.pi * np.sqrt(sma[ell_ind] ** 3 / mu)  # orbit period
+    #     revs[ell_ind] = np.floor(
+    #         (t_2[ell_ind] - t_1[ell_ind]) * 86400.0 / period[ell_ind]
+    #     )  # count revolutions based on time difference
 
     (E, P, H) = kep2cart_array(
         raan, aop, inc
@@ -122,7 +65,7 @@ def conic_1point(r_1, v_1, t_1, ta_step, mu, time_flag) -> float:
     ta_set = (
         np.linspace(np.zeros(np.shape(ta)), ta + 2.0 * np.pi * revs, ta_step, axis=1)
         + ta_1.T[None].T
-    )  # true anomaly campling
+    )  # true anomaly sampling
 
     pos_set_E = (
         p.T[None].T / (1.0 + ecc.T[None].T * np.cos(ta_set)) * np.cos(ta_set)
@@ -145,7 +88,7 @@ def conic_1point(r_1, v_1, t_1, ta_step, mu, time_flag) -> float:
 
     # generate times
     time_set = np.zeros((np.shape(np.transpose(ta_set, axes=[2, 0, 1]))))
-    if time_flag == 1:
+    if time_flag:
         dta_set = (
             np.transpose(ta_set, axes=[2, 0, 1]).T[1:].T[0]
             - np.transpose(ta_set, axes=[2, 0, 1]).T[0]
@@ -164,22 +107,18 @@ def conic_1point(r_1, v_1, t_1, ta_step, mu, time_flag) -> float:
         rev_count = np.floor(dta_set / (2.0 * np.pi))  # count orbits
         revs_adjust = np.where((tof < 0))  # adjust for TOF algorithm angle wrapping
         rev_count[revs_adjust] = rev_count[revs_adjust] + 1
-        time_set[0].T[1:] = (t_1 + tof + rev_count * period / 86400.0).T  # generate time array
-    return (pos_set, vel_set, time_set)
-    pass
+        time_set[0].T[1:] = 86400. * (t_1 / 86400.0 + tof + rev_count * period / 86400.0).T  # generate time array
+    return pos_set, vel_set, time_set
 
-
-def get_true_anomaly(p, ecc, r, v) -> float:
+def get_true_anomaly(p, ecc, r, v) -> np.ndarray:
     """
     Compute true anomaly from position, velocity, Keplerian elements.
     Inputs can be scalar or 1xN np arrays
-
     :inputs:
     p: semi parameter of orbit [km]
     ecc: eccentricity
     r: positon vector in Cartesian space [km]
     v: velocity vector in Cartesian space [km/s]
-
     :return:
     ta: true anomaly [rad]
     """
@@ -198,12 +137,10 @@ def kep2cart_array(raan, aop, inc) -> float:
     compute rotation from keplerian orbit elements to cartesian space as
     arrays: Vallado p. 126 algorithm 10 (COE2RV)
     Inputs can be scalar or 1xN np arrays
-
     :inputs:
     raan: array of right ascension of ascending node [rad]
     aop: array of argument of periapsis [rad]
     inc: array of inclination [rad]
-
     :return:
     E: eccentricity unit vector in Cartesian coordinates
     P: semi-latus rectum unit vector in Cartesian coordinates
@@ -248,14 +185,12 @@ def find_tof(r0, r, p, delta_ta, mu):
     """
     compute conic orbit time of flight: Vallado p. 134 algorithm 11 (FINDTOF)
     Inputs can be scalar or MxN np arrays
-
     :inputs:
     r0: initial position vector on orbit [km]
     r: position vector on orbit after computed time of flight [km]. Excludes initial time value
     p: conic semi-parameter[km]
     delta_ta: change in true anomaly [rad]. Excludes initial time value
     mu: gravity constant of central body [km3/s2]
-
     :return:
     TOF: time of flight between r0 and r [sec]
     """
