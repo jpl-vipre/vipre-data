@@ -95,7 +95,7 @@ def conic_1point(r_1, v_1, t_1, ta_step, mu, time_flag) -> float:
     ecc = np.sqrt(1.0 + (2.0 * energy * la.norm(h, axis=1) ** 2) / mu**2)  # eccentricity
     ta_1 = get_true_anomaly(p, ecc, r_1, v_1)  # true anomaly for point 1
     ta_2 = (
-        2.0 * np.pi * 15.0 / 180.0 * np.ones(np.shape(ta_1))
+        np.pi * 15.0 / 180.0 * np.ones(np.shape(ta_1))
     )  # get_true_anomaly(p,ecc,r_2,v_2)#true anomaly for point 2
     inc = np.arccos(h_hat.T[0][2])[None].T  # inclination
     th = np.arctan2(r_hat.T[0][2], th_hat.T[0][2])[None].T  # orbit angle
@@ -144,12 +144,12 @@ def conic_1point(r_1, v_1, t_1, ta_step, mu, time_flag) -> float:
     ).T
 
     # generate times
+    time_set = np.zeros((np.shape(np.transpose(ta_set, axes=[2, 0, 1]))))
     if time_flag == 1:
         dta_set = (
             np.transpose(ta_set, axes=[2, 0, 1]).T[1:].T[0]
             - np.transpose(ta_set, axes=[2, 0, 1]).T[0]
         )  # true anomaly differences
-        time_set = np.zeros((np.shape(np.transpose(ta_set, axes=[2, 0, 1]))))
         time_set[0].T[0] = t_1.T  # initial time setting
         tof = (
             find_tof(
@@ -165,9 +165,7 @@ def conic_1point(r_1, v_1, t_1, ta_step, mu, time_flag) -> float:
         revs_adjust = np.where((tof < 0))  # adjust for TOF algorithm angle wrapping
         rev_count[revs_adjust] = rev_count[revs_adjust] + 1
         time_set[0].T[1:] = (t_1 + tof + rev_count * period / 86400.0).T  # generate time array
-        return (pos_set, vel_set, time_set)
-    else:
-        return (pos_set, vel_set)
+    return (pos_set, vel_set, time_set)
     pass
 
 
