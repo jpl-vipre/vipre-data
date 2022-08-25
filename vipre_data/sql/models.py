@@ -87,6 +87,7 @@ class Entry(Base):
     target_body = relationship("Body")
     trajectory = relationship("Trajectory", back_populates="entries")
     maneuvers = relationship("Maneuver", back_populates="entry")
+    datarates = relationship("Datarate", back_populates="entry")
 
     # Fields
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
