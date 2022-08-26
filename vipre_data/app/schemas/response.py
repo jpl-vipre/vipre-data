@@ -47,6 +47,12 @@ class FiltersResponse(BaseModel):
     EntryFilters: list[Filter]
 
 
+class DbInfo(BaseModel):
+    database: str
+    tables: list[str]
+    schema_version: str
+
+
 class TrajectoryArcs(BaseModel):
     carrier: list[LatLongH]
     probe: list[LatLongH]
