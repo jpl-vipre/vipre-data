@@ -1,13 +1,15 @@
+from typing import Type
+
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, Text, Float, inspect, exc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-VERSION = "0.3.1"
+VERSION = "0.4.0"
 
 Base = declarative_base()
 
 
-def get_column_names(model: Base) -> list[str]:
+def get_column_names(model: Type[Base]) -> list[str]:
     mapper = inspect(model)
     try:
         columns = mapper.columns

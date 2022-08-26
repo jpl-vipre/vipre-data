@@ -4,7 +4,7 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, Text, Float, inspec
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-VERSION = "0.3.1"
+VERSION = "0.4.0"
 
 Base = declarative_base()
 
