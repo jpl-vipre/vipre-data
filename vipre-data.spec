@@ -12,7 +12,7 @@ block_cipher = None
 
 
 a = Analysis(
-    ['server.py'],
+    ['vipre_data/server.py'],
     pathex=[],
     binaries=binaries,
     datas=datas,
