@@ -27,7 +27,7 @@ def trajectory_selection(
     return result
 
 
-def get_carrier_arc(maneuver: models.Maneuver, final_time: int):
+def get_carrier_arc(maneuver: models.Maneuver, ta_step: int, final_time: int):
     # TODO: Implement via conic_1point
     # Carrier velocity vector is sum of instantaneous velocity vector and delta_v of maneuver
     velocity_vector = get_xyz_tuple(maneuver, "vel_man")
@@ -38,6 +38,8 @@ def get_carrier_arc(maneuver: models.Maneuver, final_time: int):
         v_1=velocity_vector,  # add dv_man to this v_1
         t_1=np.array([[maneuver.time_man]]),
         mu=maneuver.entry.target_body.mu,
+        ta_step=ta_step,  # Just needs to be high enough for a smooth arc
+        rev_check=0,  # Likely not ever changed by user
         time_flag=1,  # Likely not ever changed by user
     )
     pos_set, vel_set, time_set = conic_1point(**params)
@@ -103,7 +105,7 @@ def get_trajectory_arc(
     probe_lat_long = make_lat_long(height, lat, long)
 
     # Generate arc for carrier trajectory
-    height, lat, long = get_carrier_arc(entry, final_time)
+    height, lat, long = get_carrier_arc(maneuver, req.ta_step, final_time)
     carrier_lat_long = make_lat_long(height, lat, long)
 
     return {"carrier": carrier_lat_long, "probe": probe_lat_long}
