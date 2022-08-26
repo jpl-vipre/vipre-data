@@ -1,9 +1,9 @@
 import typing as t
 
-from pydantic import BaseModel as PydanticBaseModel, validator, root_validator
+from pydantic import BaseModel, validator, root_validator
 import numpy as np
 
-from .utils import Filter, LatLongH, make_lat_lon
+from .utils import Filter, LatLongH, make_lat_long
 from vipre_data.computations.cart2sph import cart2sph
 
 
@@ -17,7 +17,9 @@ def calculate_magnitudes(cls, values: dict) -> dict:
     # Assume presence of a "*_mag" field indicates a vector property for which the x, y, z components will exist
     mag_fields = [v for v in values if v.endswith("_mag")]
     for field_name in mag_fields:
-        root = field_name[:-4]  # Trim off "_mag" to get root name
+        if values[field_name]:
+            continue  # Field is already populated and should not be overwritten
+        root = field_name[:-4]  # dTrim off "_mag" to get root name
         try:
             vectors = [values[f"{root}_{c}"] for c in "xyz"]
             values[field_name] = np.linalg.norm(vectors)
@@ -31,7 +33,7 @@ def calculate_magnitudes(cls, values: dict) -> dict:
     return values
 
 
-class BaseModel(PydanticBaseModel):
+class DbModelBase(BaseModel):
     _calculate_magnitudes = root_validator(allow_reuse=True, pre=False)(calculate_magnitudes)
 
 
@@ -45,7 +47,12 @@ class FiltersResponse(BaseModel):
     EntryFilters: list[Filter]
 
 
-class BodySummary(BaseModel):
+class TrajectoryArcs(BaseModel):
+    carrier: list[LatLongH]
+    probe: list[LatLongH]
+
+
+class BodySummary(DbModelBase):
     id: t.Optional[int]
     name: t.Optional[str]
 
@@ -63,30 +70,52 @@ class Body(BodySummary):
     pole_vec_z: float
 
 
-class Architecture(BaseModel):
+class Architecture(DbModelBase):
     sequence: t.Optional[str]
 
     class Config:
         orm_mode = True
 
 
-class Maneuver(BaseModel):
+class Maneuver(DbModelBase):
     id: t.Optional[int]
+
     maneuver_type: t.Optional[str]
-    dv_maneuver: t.Optional[float]
+    time_man: t.Optional[int]
 
-    class Config:
-        orm_mode = True
+    dv_maneuver_x: t.Optional[float]
+    dv_maneuver_y: t.Optional[float]
+    dv_maneuver_z: t.Optional[float]
+    dv_maneuver_mag: t.Optional[float]
+
+    pos_man_x: t.Optional[float]
+    pos_man_y: t.Optional[float]
+    pos_man_z: t.Optional[float]
+    vel_man_x: t.Optional[float]
+    vel_man_y: t.Optional[float]
+    vel_man_z: t.Optional[float]
 
 
-class Occultation(BaseModel):
+class Config:
+    orm_mode = True
+
+
+class DataRate(DbModelBase):
+    id: t.Optional[int]
+    entry_id: t.Optional[int]
+    order: t.Optional[int]
+    time: t.Optional[int]
+    rate: t.Optional[float]
+
+
+class Occultation(DbModelBase):
     id: t.Optional[int]
 
     class Config:
         orm_mode = True
 
 
-class Flyby(BaseModel):
+class Flyby(DbModelBase):
     flyby_body: Body
     order: int
     t_flyby: float
@@ -95,11 +124,11 @@ class Flyby(BaseModel):
         orm_mode = True
 
 
-class TrajectorySummary(BaseModel):
+class TrajectorySummary(DbModelBase):
     id: t.Optional[int]
 
     t_launch: t.Optional[float]
-    dv_total: t.Optional[float]
+    interplanetary_dv: t.Optional[float]
 
     v_inf_arr_x: t.Optional[float]
     v_inf_arr_y: t.Optional[float]
@@ -119,6 +148,8 @@ class Trajectory(TrajectorySummary):
     pos_earth_arr_y: t.Optional[float]
     pos_earth_arr_z: t.Optional[float]
     pos_earth_arr_mag: t.Optional[float]
+    pos_earth_arr_lat: t.Optional[float]
+    pos_earth_arr_lon: t.Optional[float]
 
     pos_sc_arr_x: t.Optional[float]
     pos_sc_arr_y: t.Optional[float]
@@ -130,6 +161,13 @@ class Trajectory(TrajectorySummary):
     pos_target_arr_z: t.Optional[float]
     pos_target_arr_mag: t.Optional[float]
 
+    solar_phase_angle: t.Optional[float]
+    solar_conj_angle: t.Optional[float]
+    solar_incidence_angle: t.Optional[float]
+
+    pos_sun_arr_lat: t.Optional[float]
+    pos_sun_arr_lon: t.Optional[float]
+
 
 class TrajectoryFull(Trajectory):
     target_body: t.Optional[Body]
@@ -138,7 +176,7 @@ class TrajectoryFull(Trajectory):
     flybys: t.Optional[list[Flyby]]
 
 
-class Entry(BaseModel):
+class Entry(DbModelBase):
     id: t.Optional[int]
 
     target_body: t.Optional[Body]
@@ -162,15 +200,23 @@ class Entry(BaseModel):
     pos_entry_longitude: t.Optional[float]
     pos_entry_height: t.Optional[float]
 
-    flight_path_angle: t.Optional[float]
+    rot_vel_entry_x: t.Optional[float]
+    rot_vel_entry_y: t.Optional[float]
+    rot_vel_entry_z: t.Optional[float]
+    rot_vel_entry_mag: t.Optional[float]
 
-    @root_validator(pre=False)
-    def make_lat_long(cls, values):
-        pos = np.array([[values[f"pos_entry_{c}"]] for c in "xyz"])
-        lat_long = make_lat_lon(*cart2sph(*pos))[0]
-        for i, c in enumerate(["latitude", "longitude", "height"]):
-            values[f"pos_entry_{c}"] = lat_long.dict()[c]
-        return values
+    flight_path_angle: t.Optional[float]
+    solar_phase_angle: t.Optional[float]
+    solar_conj_angle: t.Optional[float]
+    solar_incidence_angle: t.Optional[float]
+
+    # @root_validator(pre=False)
+    # def make_lat_long(cls, values):
+    #     pos = np.array([[values[f"pos_entry_{c}"]] for c in "xyz"])
+    #     lat_long = make_lat_long(*cart2sph(*pos))[0]
+    #     for i, c in enumerate(["latitude", "longitude", "height"]):
+    #         values[f"pos_entry_{c}"] = lat_long.dict()[c]
+    #     return values
 
     class Config:
         orm_mode = True
@@ -179,6 +225,7 @@ class Entry(BaseModel):
 class EntryFull(Entry):
     trajectory: t.Optional[Trajectory]
     maneuvers: t.Optional[list[Maneuver]]
+    datarates: t.Optional[list[DataRate]]
 
     pos_sun_entry_x: t.Optional[float]
     pos_sun_entry_y: t.Optional[float]
