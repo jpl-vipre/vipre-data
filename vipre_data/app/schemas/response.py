@@ -148,6 +148,8 @@ class Trajectory(TrajectorySummary):
     pos_earth_arr_y: t.Optional[float]
     pos_earth_arr_z: t.Optional[float]
     pos_earth_arr_mag: t.Optional[float]
+    pos_earth_arr_lat: t.Optional[float]
+    pos_earth_arr_lon: t.Optional[float]
 
     pos_sc_arr_x: t.Optional[float]
     pos_sc_arr_y: t.Optional[float]
@@ -162,6 +164,9 @@ class Trajectory(TrajectorySummary):
     solar_phase_angle: t.Optional[float]
     solar_conj_angle: t.Optional[float]
     solar_incidence_angle: t.Optional[float]
+
+    pos_sun_arr_lat: t.Optional[float]
+    pos_sun_arr_lon: t.Optional[float]
 
 
 class TrajectoryFull(Trajectory):
