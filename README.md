@@ -99,7 +99,7 @@ execution.
 
 > PyInstaller requires a framework build of Python; if you do not have this (PyInstaller will emit
 > errors), you can build it with `pyenv`. Make sure you are running the latest version of `pyenv` or
-> you ay run into build errors similar
+> you may run into build errors similar
 > to [Issue #12](https://github.jpl.nasa.gov/VIPRE/vipre-data/issues/12)
 
 <details>
@@ -115,8 +115,7 @@ python -m venv ./venv
 pip install -r requirements.txt
 pip install pyinstaller
 pip install -e .
-cd vipre_data
-pyinstaller -y server.spec
+pyinstaller -y vipre-data.spec
 ```
 
 </details>

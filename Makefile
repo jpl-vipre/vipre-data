@@ -1,5 +1,16 @@
 .PHONY: hello
 
+VERSION = $(shell poetry version | cut -d ' ' -f 2)
+
+mac:
+	poetry install && \
+	poetry run pyinstaller -y vipre-data.spec && \
+	cd ./dist && \
+	zip -r vipre-data-${VERSION}-mac.zip vipre-data/
+
+version:
+	echo ${VERSION}
+
 hello:
 	echo hello
 
