@@ -96,6 +96,15 @@ def get_bodies(db: Session, body_id: Optional[int] = None) -> list[models.Body]:
     return query.all()
 
 
+def get_datarates(db: Session, entry_id: int) -> list[models.Datarate]:
+    query: Query = (
+        db.query(models.Datarate)
+        .where(models.Datarate.entry_id == entry_id)
+        .order_by(models.Datarate.order)
+    )
+    return query.all()
+
+
 # def query_trajectories(
 #         db: Session,
 #         filters: schemas.Filters, fields: Optional[list[str]] = None,

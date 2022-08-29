@@ -15,7 +15,6 @@ router = APIRouter(
 def query_entries(req: schemas.request.EntryRequest, db: Session = Depends(deps.get_db)):
     query = crud.make_query(db, models.Entry, req.filters, req.fields, req.limit)
     result = query.all()
-    print(result)
     return result
 
 
@@ -36,5 +35,10 @@ def query_entries(req: schemas.request.EntryRequest, db: Session = Depends(deps.
 @router.get("/{entry_id}", response_model=schemas.response.EntryFull)
 def get_entry(entry_id: int, db: Session = Depends(deps.get_db)):
     result = crud.get_entry(db, entry_id)
-    print(result)
+    return result
+
+
+@router.get("/{entry_id}/datarates", response_model=list[schemas.response.DataRate])
+def get_entry(entry_id: int, db: Session = Depends(deps.get_db)):
+    result = crud.get_datarates(db, entry_id)
     return result

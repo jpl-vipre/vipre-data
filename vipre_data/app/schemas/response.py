@@ -36,6 +36,10 @@ def calculate_magnitudes(cls, values: dict) -> dict:
 class DbModelBase(BaseModel):
     _calculate_magnitudes = root_validator(allow_reuse=True, pre=False)(calculate_magnitudes)
 
+    class Config:
+        orm_mode = True
+        extra = "allow"
+
 
 class FieldsResponse(BaseModel):
     TrajectoryFields: list[str]
@@ -62,10 +66,6 @@ class BodySummary(DbModelBase):
     id: t.Optional[int]
     name: t.Optional[str]
 
-    class Config:
-        orm_mode = True
-        extra = "allow"
-
 
 class Body(BodySummary):
     radius: float
@@ -78,9 +78,6 @@ class Body(BodySummary):
 
 class Architecture(DbModelBase):
     sequence: t.Optional[str]
-
-    class Config:
-        orm_mode = True
 
 
 class Maneuver(DbModelBase):
@@ -102,10 +99,6 @@ class Maneuver(DbModelBase):
     vel_man_z: t.Optional[float]
 
 
-class Config:
-    orm_mode = True
-
-
 class DataRate(DbModelBase):
     id: t.Optional[int]
     entry_id: t.Optional[int]
@@ -117,17 +110,11 @@ class DataRate(DbModelBase):
 class Occultation(DbModelBase):
     id: t.Optional[int]
 
-    class Config:
-        orm_mode = True
-
 
 class Flyby(DbModelBase):
     flyby_body: Body
     order: int
     t_flyby: float
-
-    class Config:
-        orm_mode = True
 
 
 class TrajectorySummary(DbModelBase):
@@ -143,10 +130,6 @@ class TrajectorySummary(DbModelBase):
 
     t_arr: t.Optional[float]
     c3: t.Optional[float]
-
-    class Config:
-        orm_mode = True
-        extra = "allow"
 
 
 class Trajectory(TrajectorySummary):
@@ -223,9 +206,6 @@ class Entry(DbModelBase):
     #     for i, c in enumerate(["latitude", "longitude", "height"]):
     #         values[f"pos_entry_{c}"] = lat_long.dict()[c]
     #     return values
-
-    class Config:
-        orm_mode = True
 
 
 class EntryFull(Entry):
