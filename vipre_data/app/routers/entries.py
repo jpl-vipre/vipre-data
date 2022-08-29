@@ -38,7 +38,7 @@ def get_entry(entry_id: int, db: Session = Depends(deps.get_db)):
     return result
 
 
-@router.get("/{entry_id}/datarates", response_model=schemas.response.DataRate)
+@router.get("/{entry_id}/datarates", response_model=list[schemas.response.DataRate])
 def get_entry(entry_id: int, db: Session = Depends(deps.get_db)):
     result = crud.get_datarates(db, entry_id)
     return result
