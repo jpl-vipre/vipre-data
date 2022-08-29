@@ -1,3 +1,10 @@
+"""
+Validate a database schema against the sqlalchemy-defined data models
+
+Reference:
+https://stackoverflow.com/questions/30428639/check-database-schema-matches-sqlalchemy-models-on-application-startup
+"""
+
 import logging
 
 from sqlalchemy import inspect

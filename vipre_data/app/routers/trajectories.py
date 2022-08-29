@@ -20,7 +20,7 @@ def get_trajectories(req: schemas.request.TrajectoryRequest, db: Session = Depen
     return result
 
 
-@router.get("/{trajectory_id}", response_model=schemas.response.Trajectory)
+@router.get("/{trajectory_id}", response_model=schemas.response.TrajectoryFull)
 def get_trajectory(trajectory_id: int, db: Session = Depends(deps.get_db)):
     result = crud.get_trajectory(db, trajectory_id)
     return result

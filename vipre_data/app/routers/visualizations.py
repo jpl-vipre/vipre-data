@@ -101,11 +101,11 @@ def get_trajectory_arc(
     final_time = final_datarate.time + entry.t_entry
 
     # Generate arc for probe trajectory
-    height, lat, long = get_probe_arc(entry, maneuver, req.ta_step)
+    height, lat, long = get_probe_arc(entry, maneuver, req.probe_ta_step)
     probe_lat_long = make_lat_long(height, lat, long)
 
     # Generate arc for carrier trajectory
-    height, lat, long = get_carrier_arc(maneuver, req.ta_step, final_time)
+    height, lat, long = get_carrier_arc(maneuver, req.carrier_ta_step, final_time)
     carrier_lat_long = make_lat_long(height, lat, long)
 
     return {"carrier": carrier_lat_long, "probe": probe_lat_long}

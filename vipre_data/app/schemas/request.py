@@ -73,4 +73,5 @@ class EntryRequest(DataRequest):
 
 
 class EntryArcRequest(BaseModel):
-    ta_step: conint(gt=15, le=100) = 25
+    probe_ta_step: conint(ge=15, le=100) = 25
+    carrier_ta_step: conint(ge=15, le=5000) = 500
