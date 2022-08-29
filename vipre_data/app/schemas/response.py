@@ -185,8 +185,8 @@ class Entry(DbModelBase):
     vel_entry_y: t.Optional[float]
     vel_entry_z: t.Optional[float]
     vel_entry_mag: t.Optional[float]
-    pos_entry_latitude: t.Optional[float]
-    pos_entry_longitude: t.Optional[float]
+    pos_entry_lat: t.Optional[float]
+    pos_entry_lon: t.Optional[float]
     pos_entry_height: t.Optional[float]
 
     rot_vel_entry_x: t.Optional[float]
@@ -199,13 +199,11 @@ class Entry(DbModelBase):
     solar_conj_angle: t.Optional[float]
     solar_incidence_angle: t.Optional[float]
 
-    # @root_validator(pre=False)
-    # def make_lat_long(cls, values):
-    #     pos = np.array([[values[f"pos_entry_{c}"]] for c in "xyz"])
-    #     lat_long = make_lat_long(*cart2sph(*pos))[0]
-    #     for i, c in enumerate(["latitude", "longitude", "height"]):
-    #         values[f"pos_entry_{c}"] = lat_long.dict()[c]
-    #     return values
+    @root_validator(pre=False)
+    def make_height(cls, values):
+        pos = np.array([values["pos_entry_lat"], values["pos_entry_lon"]])
+        values["pos_entry_height"] = np.linalg.norm(pos)
+        return values
 
 
 class EntryFull(Entry):
