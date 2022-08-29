@@ -4,6 +4,8 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, Text, Float, inspec
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
+VERSION = "0.4.0"
+
 Base = declarative_base()
 
 
@@ -329,9 +331,13 @@ class Trajectory(Base):
     pos_earth_arr_x = Column(Float, doc="x component of Earth position at time of arrival [km]")
     pos_earth_arr_y = Column(Float, doc="y component of Earth position at time of arrival [km]")
     pos_earth_arr_z = Column(Float, doc="z component of Earth position at time of arrival [km]")
+    pos_earth_arr_lat = Column(Float, doc="latitude of Earth in body frame at time of arrival")
+    pos_earth_arr_lon = Column(Float, doc="longitude of Earth in body frame at time of arrival")
     pos_sc_arr_x = Column(Float, doc="x component of spacecraft position at time of arrival [km]")
     pos_sc_arr_y = Column(Float, doc="y component of spacecraft position at time of arrival [km]")
     pos_sc_arr_z = Column(Float, doc="z component of spacecraft position at time of arrival [km]")
     pos_target_arr_x = Column(Float, doc="x component of target position at time of arrival [km]")
     pos_target_arr_y = Column(Float, doc="y component of target position at time of arrival [km]")
     pos_target_arr_z = Column(Float, doc="z component of target position at time of arrival [km]")
+    pos_sun_arr_lat = Column(Float, doc="latitude of Sun in body frame at time of arrival")
+    pos_sun_arr_lon = Column(Float, doc="longitude of Sun in body frame at time of arrival")
