@@ -208,7 +208,7 @@ class Entry(DbModelBase):
 
 
 class EntryFull(Entry):
-    trajectory: t.Optional[Trajectory]
+    trajectory: t.Optional[TrajectoryFull]
     maneuvers: t.Optional[list[Maneuver]]
     datarates: t.Optional[list[DataRate]]
 
