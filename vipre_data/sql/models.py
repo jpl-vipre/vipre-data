@@ -4,7 +4,7 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, Text, Float, inspec
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-VERSION = "0.4.0"
+VERSION = "1.0.0"
 
 Base = declarative_base()
 
@@ -46,9 +46,9 @@ class Body(Base):
         doc="corresponds to the ID in the NASA Horizons Database",
     )
     name = Column(Text, index=True, doc="name of body")
-    radius = Column(Float, doc="mean radius of body [km]")
-    mu = Column(Float, doc="gravity parameter [km^3/s^2]")
-    period = Column(Float, doc="body rotational period [days]")
+    radius = Column(Float, doc="mean radius of body")
+    mu = Column(Float, doc="gravity parameter")
+    period = Column(Float, doc="body rotational period")
     pole_vec_x = Column(
         Float, doc="x component of body spin pole unit vector represented in EMO2000 frame"
     )
@@ -76,9 +76,9 @@ class Datarate(Base):
     time = Column(
         Integer,
         nullable=True,
-        doc="Downsampled time in datarate time series. Time is seconds after entry",
+        doc="Down sampled time in datarate time series. Time is seconds after entry",
     )
-    rate = Column(Float, nullable=True, doc="Downsampled datarate in datarate time series")
+    rate = Column(Float, nullable=True, doc="Down sampled datarate in datarate time series")
 
 
 class Entry(Base):
@@ -102,85 +102,146 @@ class Entry(Base):
         index=True,
         doc="ID of the parent Trajectory in the database",
     )
-    bvec_theta = Column(Float, index=True, doc="Angle on B-plane for target arrival [rad]")
-    bvec_mag = Column(
-        Float, index=True, doc="Radial distance from body origin for target arrival [km]"
-    )
+    bvec_theta = Column(Float, index=True, doc="Angle on B-plane for target arrival")
+    bvec_mag = Column(Float, index=True, doc="Radial distance from body origin for target arrival")
     safe = Column(
         Boolean,
         doc="Flag indicating whether trajectory avoids unsafe conditions (ring impact, etc)",
     )
     t_entry = Column(Integer, index=True, doc="Time of atmospheric entry in seconds past J2000")
-    pos_entry_x = Column(Float, doc="x component of spacecraft position at time of entry [km]")
-    pos_entry_y = Column(Float, doc="y component of spacecraft position at time of entry [km]")
-    pos_entry_z = Column(Float, doc="z component of spacecraft position at time of entry [km]")
+    pos_entry_x = Column(
+        Float, nullable=True, doc="x component of spacecraft position at time of entry"
+    )
+    pos_entry_y = Column(
+        Float, nullable=True, doc="y component of spacecraft position at time of entry"
+    )
+    pos_entry_z = Column(
+        Float, nullable=True, doc="z component of spacecraft position at time of entry"
+    )
     pos_entry_mag = Column(
-        Float, index=True, doc="magnitude of spacecraft position at time of entry"
+        Float, index=True, nullable=True, doc="magnitude of spacecraft position at time of entry"
     )
     pos_entry_lat = Column(
-        Float, index=True, doc="latitude of spacecraft position at time of entry"
+        Float, index=True, nullable=True, doc="latitude of spacecraft position at time of entry"
     )
     pos_entry_lon = Column(
-        Float, index=True, doc="longitude of spacecraft position at time of entry"
+        Float, nullable=True, doc="longitude of spacecraft position at time of entry"
     )
     vel_entry_x = Column(
-        Float, doc="X component of spacecraft relative entry velocity at time of entry [km/s]"
+        Float,
+        nullable=True,
+        doc="X component of spacecraft relative entry velocity at time of entry",
     )
     vel_entry_y = Column(
-        Float, doc="y component of spacecraft relative entry velocity at time of entry [km/s]"
+        Float,
+        nullable=True,
+        doc="y component of spacecraft relative entry velocity at time of entry",
     )
     vel_entry_z = Column(
-        Float, doc="z component of spacecraft relative entry velocity at time of entry [km/s]"
+        Float,
+        nullable=True,
+        doc="z component of spacecraft relative entry velocity at time of entry",
     )
     vel_entry_mag = Column(
         Float,
         index=True,
-        doc="magnitude of spacecraft relative entry velocity at time of entry [km/s]",
+        nullable=True,
+        doc="magnitude of spacecraft relative entry velocity at time of entry",
+    )
+    vel_entry_dec = Column(
+        Float,
+        index=True,
+        nullable=True,
+        doc="declination of spacecraft relative entry velocity at time of entry",
+    )
+    vel_entry_ra = Column(
+        Float,
+        index=True,
+        nullable=True,
+        doc="right ascension of spacecraft relative entry velocity at time of entry",
     )
     flight_path_angle = Column(
         Float, index=True, nullable=True, doc="flight path angle at point of entry"
     )
-    solar_phase_angle = Column(Float, index=True, nullable=True, doc="Sun-Target-Vinfinity Angle")
+    solar_phase_angle = Column(Float, index=True, nullable=True, doc="Sun-Target-V-infinity Angle")
     solar_conj_angle = Column(Float, index=True, nullable=True, doc="Sun-Target-Earth Angle")
     solar_incidence_angle = Column(
         Float, index=True, nullable=True, doc="Sun-Target-Entry Position Angle"
     )
-    pos_sun_entry_x = Column(Float, doc="x component of sun position at time of entry [km]")
-    pos_sun_entry_y = Column(Float, doc="y component of sun position at time of entry [km]")
-    pos_sun_entry_z = Column(Float, doc="z component of sun position at time of entry [km]")
-    pos_earth_entry_x = Column(Float, doc="x component of Earth position at time of entry [km]")
-    pos_earth_entry_y = Column(Float, doc="y component of Earth position at time of entry [km]")
-    pos_earth_entry_z = Column(Float, doc="z component of Earth position at time of entry [km]")
-    pos_target_entry_x = Column(Float, doc="x component of target position at time of entry [km]")
-    pos_target_entry_y = Column(Float, doc="y component of target position at time of entry [km]")
-    pos_target_entry_z = Column(Float, doc="z component of target position at time of entry [km]")
+    pos_sun_entry_x = Column(
+        Float, nullable=True, doc="x component of sun position at time of entry"
+    )
+    pos_sun_entry_y = Column(
+        Float, nullable=True, doc="y component of sun position at time of entry"
+    )
+    pos_sun_entry_z = Column(
+        Float, nullable=True, doc="z component of sun position at time of entry"
+    )
+    pos_earth_entry_x = Column(
+        Float, nullable=True, doc="x component of Earth position at time of entry"
+    )
+    pos_earth_entry_y = Column(
+        Float, nullable=True, doc="y component of Earth position at time of entry"
+    )
+    pos_earth_entry_z = Column(
+        Float, nullable=True, doc="z component of Earth position at time of entry"
+    )
+    pos_target_entry_x = Column(
+        Float, nullable=True, doc="x component of target position at time of entry"
+    )
+    pos_target_entry_y = Column(
+        Float, nullable=True, doc="y component of target position at time of entry"
+    )
+    pos_target_entry_z = Column(
+        Float, nullable=True, doc="z component of target position at time of entry"
+    )
     rot_vel_entry_x = Column(
         Float,
-        doc="X component of spacecraft relative entry velocity at time of entry in planet rotating frame [km/s]",
+        nullable=True,
+        doc="X component of spacecraft relative entry velocity at time of entry in planet rotating frame",
     )
     rot_vel_entry_y = Column(
         Float,
-        doc="y component of spacecraft relative entry velocity at time of entry in planet rotating frame [km/s]",
+        nullable=True,
+        doc="y component of spacecraft relative entry velocity at time of entry in planet rotating frame",
     )
     rot_vel_entry_z = Column(
         Float,
-        doc="z component of spacecraft relative entry velocity at time of entry in planet rotating frame [km/s]",
+        nullable=True,
+        doc="z component of spacecraft relative entry velocity at time of entry in planet rotating frame",
     )
     rot_vel_entry_mag = Column(
         Float,
         index=True,
-        doc="magnitude of spacecraft relative entry velocity at time of entry in planet rotating frame [km/s]",
+        nullable=True,
+        doc="magnitude of spacecraft relative entry velocity at time of entry in planet rotating frame",
+    )
+    rot_vel_entry_dec = Column(
+        Float,
+        index=True,
+        nullable=True,
+        doc="declination of spacecraft relative entry velocity at time of entry in planet rotating frame",
+    )
+    rot_vel_entry_ra = Column(
+        Float,
+        index=True,
+        nullable=True,
+        doc="right ascension of spacecraft relative entry velocity at time of entry in planet rotating frame",
     )
     relay_volume = Column(
         Float, index=True, nullable=True, doc="Total data volume relayable by entry vehicle."
     )
     ring_shadow = Column(
-        Boolean, nullable=True, doc="true if the entry is in the shadow of a planet's ring"
+        Boolean,
+        index=True,
+        nullable=True,
+        doc="true if the entry is in the shadow of a planet's ring",
     )
     carrier_orbit = Column(
         Text,
+        index=True,
         nullable=True,
-        doc="label describing the pre-divert orbit. Primarily used to distinguish between flyby and orbitting probe releases.",
+        doc="label describing the pre-divert orbit. Primarily used to distinguish between flyby and orbiting probe releases.",
     )
 
 
@@ -200,17 +261,15 @@ class Flyby(Base):
     body_id = Column(Integer, ForeignKey("body.id"), index=True, doc="SQL body ID of flyby body")
     order = Column(Integer, doc="Order of this flyby in trajectory's flyby sequence")
     t_flyby = Column(Integer, doc="Time of flyby in seconds past J2000")
-    altitude = Column(
-        Float, doc="Altitude above flyby body surface at flyby hyperbola periapsis [km]"
-    )
-    v_inf_in_x = Column(Float, doc="x component of incoming flyby v_infinity [km/s]")
-    v_inf_in_y = Column(Float, doc="y component of incoming flyby v_infinity [km/s]")
-    v_inf_in_z = Column(Float, doc="z component of incoming flyby v_infinity [km/s]")
-    v_inf_in_mag = Column(Float, doc="magnitude component of incoming flyby v_infinity [km/s]")
-    v_inf_out_x = Column(Float, doc="x component of outgoing flyby v_infinity [km/s]")
-    v_inf_out_y = Column(Float, doc="y component of outgoing flyby v_infinity [km/s]")
-    v_inf_out_z = Column(Float, doc="z component of outgoing flyby v_infinity [km/s]")
-    v_inf_out_mag = Column(Float, doc="magnitude of outgoing flyby v_infinity [km/s]")
+    altitude = Column(Float, doc="Altitude above flyby body surface at flyby hyperbola periapsis")
+    v_inf_in_x = Column(Float, doc="x component of incoming flyby v_infinity")
+    v_inf_in_y = Column(Float, doc="y component of incoming flyby v_infinity")
+    v_inf_in_z = Column(Float, doc="z component of incoming flyby v_infinity")
+    v_inf_in_mag = Column(Float, doc="magnitude component of incoming flyby v_infinity")
+    v_inf_out_x = Column(Float, doc="x component of outgoing flyby v_infinity")
+    v_inf_out_y = Column(Float, doc="y component of outgoing flyby v_infinity")
+    v_inf_out_z = Column(Float, doc="z component of outgoing flyby v_infinity")
+    v_inf_out_mag = Column(Float, doc="magnitude of outgoing flyby v_infinity")
 
 
 class Maneuver(Base):
@@ -226,37 +285,32 @@ class Maneuver(Base):
         Integer, ForeignKey("entry.id"), index=True, doc="ID of the parent Entry row in database"
     )
     maneuver_type = Column(
-        Text,
-        index=True,
-        nullable=True,
-        doc="Type of maneuver performed to separate from entry vehicle.",
+        Text, nullable=True, doc="Type of maneuver performed to separate from entry vehicle."
     )
     time_man = Column(
         Integer, nullable=True, doc="Time that spacecraft performs maneuver in seconds past J2000."
     )
-    dv_maneuver_x = Column(Float, index=True, nullable=True, doc="Delta V of maneuver [km/s] in X.")
-    dv_maneuver_y = Column(Float, index=True, nullable=True, doc="Delta V of maneuver [km/s] in Y.")
-    dv_maneuver_z = Column(Float, index=True, nullable=True, doc="Delta V of maneuver [km/s] in Z.")
-    dv_maneuver_mag = Column(
-        Float, index=True, nullable=True, doc="Delta V of maneuver [km/s] magnitude."
-    )
+    dv_maneuver_x = Column(Float, nullable=True, doc="Delta V of maneuver in X.")
+    dv_maneuver_y = Column(Float, nullable=True, doc="Delta V of maneuver in Y.")
+    dv_maneuver_z = Column(Float, nullable=True, doc="Delta V of maneuver in Z.")
+    dv_maneuver_mag = Column(Float, index=True, nullable=True, doc="Delta V of maneuver magnitude.")
     pos_man_x = Column(
-        Float, nullable=True, doc="x component of spacecraft position at time of maneuver [km]."
+        Float, nullable=True, doc="x component of spacecraft position at time of maneuver."
     )
     pos_man_y = Column(
-        Float, nullable=True, doc="y component of spacecraft position at time of maneuver [km]."
+        Float, nullable=True, doc="y component of spacecraft position at time of maneuver."
     )
     pos_man_z = Column(
-        Float, nullable=True, doc="z component of spacecraft position at time of maneuver [km]."
+        Float, nullable=True, doc="z component of spacecraft position at time of maneuver."
     )
     vel_man_x = Column(
-        Float, nullable=True, doc="x component of spacecraft velocity at time of maneuver [km/s]."
+        Float, nullable=True, doc="x component of spacecraft velocity at time of maneuver."
     )
     vel_man_y = Column(
-        Float, nullable=True, doc="y component of spacecraft velocity at time of maneuver [km/s]."
+        Float, nullable=True, doc="y component of spacecraft velocity at time of maneuver."
     )
     vel_man_z = Column(
-        Float, nullable=True, doc="z component of spacecraft velocity at time of maneuver [km/s]."
+        Float, nullable=True, doc="z component of spacecraft velocity at time of maneuver."
     )
 
 
@@ -303,24 +357,24 @@ class Trajectory(Base):
     )
     t_launch = Column(Integer, index=True, doc="Time of launch in seconds past J2000")
     t_arr = Column(Integer, index=True, doc="Time of target arrival in seconds past J2000")
-    v_inf_arr_x = Column(
-        Float, index=True, doc="x component of interplanetary arrival velocity at target [km/s]"
-    )
-    v_inf_arr_y = Column(
-        Float, index=True, doc="y component of interplanetary arrival velocity at target [km/s]"
-    )
-    v_inf_arr_z = Column(
-        Float, index=True, doc="z component of interplanetary arrival velocity at target [km/s]"
-    )
+    v_inf_arr_x = Column(Float, doc="x component of interplanetary arrival velocity at target")
+    v_inf_arr_y = Column(Float, doc="y component of interplanetary arrival velocity at target")
+    v_inf_arr_z = Column(Float, doc="z component of interplanetary arrival velocity at target")
     v_inf_arr_mag = Column(
-        Float, index=True, doc="magnitude of interplanetary arrival velocity at target [km/s]"
+        Float, index=True, doc="magnitude of interplanetary arrival velocity at target"
     )
-    c3 = Column(Float, index=True, doc="Characteristic energy of launch [km^2/s^2]")
+    v_inf_arr_dec = Column(
+        Float, index=True, doc="declination of interplanetary arrival velocity at target"
+    )
+    v_inf_arr_ra = Column(
+        Float, index=True, doc="right ascension of interplanetary arrival velocity at target"
+    )
+    c3 = Column(Float, index=True, doc="Characteristic energy of launch")
     interplanetary_dv = Column(
-        Float, index=True, doc="total DeltaV required for interplanetary trajectory [km/s]"
+        Float, index=True, doc="total DeltaV required for interplanetary trajectory"
     )
     solar_phase_angle = Column(
-        Float, index=True, nullable=True, doc="Sun-Target-Vinfinity Angle at arrival"
+        Float, index=True, nullable=True, doc="Sun-Target-V-infinity Angle at arrival"
     )
     solar_conj_angle = Column(
         Float, index=True, nullable=True, doc="Sun-Target-Earth Angle at arrival"
@@ -328,16 +382,24 @@ class Trajectory(Base):
     solar_incidence_angle = Column(
         Float, index=True, nullable=True, doc="Sun-Target-Entry Position Angle at arrival"
     )
-    pos_earth_arr_x = Column(Float, doc="x component of Earth position at time of arrival [km]")
-    pos_earth_arr_y = Column(Float, doc="y component of Earth position at time of arrival [km]")
-    pos_earth_arr_z = Column(Float, doc="z component of Earth position at time of arrival [km]")
-    pos_earth_arr_lat = Column(Float, doc="latitude of Earth in body frame at time of arrival")
-    pos_earth_arr_lon = Column(Float, doc="longitude of Earth in body frame at time of arrival")
-    pos_sc_arr_x = Column(Float, doc="x component of spacecraft position at time of arrival [km]")
-    pos_sc_arr_y = Column(Float, doc="y component of spacecraft position at time of arrival [km]")
-    pos_sc_arr_z = Column(Float, doc="z component of spacecraft position at time of arrival [km]")
-    pos_target_arr_x = Column(Float, doc="x component of target position at time of arrival [km]")
-    pos_target_arr_y = Column(Float, doc="y component of target position at time of arrival [km]")
-    pos_target_arr_z = Column(Float, doc="z component of target position at time of arrival [km]")
-    pos_sun_arr_lat = Column(Float, doc="latitude of Sun in body frame at time of arrival")
-    pos_sun_arr_lon = Column(Float, doc="longitude of Sun in body frame at time of arrival")
+    pos_earth_arr_x = Column(Float, doc="x component of Earth position at time of arrival")
+    pos_earth_arr_y = Column(Float, doc="y component of Earth position at time of arrival")
+    pos_earth_arr_z = Column(Float, doc="z component of Earth position at time of arrival")
+    pos_earth_arr_lat = Column(
+        Float, index=True, doc="latitude of Earth in body frame at time of arrival"
+    )
+    pos_earth_arr_lon = Column(
+        Float, index=True, doc="longitude of Earth in body frame at time of arrival"
+    )
+    pos_sc_arr_x = Column(Float, doc="x component of spacecraft position at time of arrival")
+    pos_sc_arr_y = Column(Float, doc="y component of spacecraft position at time of arrival")
+    pos_sc_arr_z = Column(Float, doc="z component of spacecraft position at time of arrival")
+    pos_target_arr_x = Column(Float, doc="x component of target position at time of arrival")
+    pos_target_arr_y = Column(Float, doc="y component of target position at time of arrival")
+    pos_target_arr_z = Column(Float, doc="z component of target position at time of arrival")
+    pos_sun_arr_lat = Column(
+        Float, index=True, doc="latitude of Sun in body frame at time of arrival"
+    )
+    pos_sun_arr_lon = Column(
+        Float, index=True, doc="longitude of Sun in body frame at time of arrival"
+    )

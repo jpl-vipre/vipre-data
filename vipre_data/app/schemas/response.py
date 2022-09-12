@@ -1,10 +1,9 @@
 import typing as t
 
-from pydantic import BaseModel, validator, root_validator
+from pydantic import BaseModel, root_validator
 import numpy as np
 
-from .utils import Filter, LatLongH, make_lat_long
-from vipre_data.computations.cart2sph import cart2sph
+from .utils import Filter, LatLongH
 
 
 def calculate_magnitudes(cls, values: dict) -> dict:
@@ -82,6 +81,7 @@ class Architecture(DbModelBase):
 
 class Maneuver(DbModelBase):
     id: t.Optional[int]
+    entry_id: t.Optional[int]
 
     maneuver_type: t.Optional[str]
     time_man: t.Optional[int]
@@ -109,6 +109,9 @@ class DataRate(DbModelBase):
 
 class Occultation(DbModelBase):
     id: t.Optional[int]
+    trajectory_id: t.Optional[int]
+    t_occ_in: t.Optional[int]
+    t_occ_out: t.Optional[int]
 
 
 class Flyby(DbModelBase):
@@ -117,8 +120,24 @@ class Flyby(DbModelBase):
     t_flyby: float
 
 
+class FlyByFull(Flyby):
+    altitude: t.Optional[float]
+
+    v_inf_in_x: t.Optional[float]
+    v_inf_in_y: t.Optional[float]
+    v_inf_in_z: t.Optional[float]
+    v_inf_in_mag: t.Optional[float]
+
+    v_inf_out_x: t.Optional[float]
+    v_inf_out_y: t.Optional[float]
+    v_inf_out_z: t.Optional[float]
+    v_inf_out_mag: t.Optional[float]
+
+
 class TrajectorySummary(DbModelBase):
     id: t.Optional[int]
+    body_id: t.Optional[int]
+    architecture_id: t.Optional[int]
 
     t_launch: t.Optional[float]
     interplanetary_dv: t.Optional[float]
@@ -127,6 +146,8 @@ class TrajectorySummary(DbModelBase):
     v_inf_arr_y: t.Optional[float]
     v_inf_arr_z: t.Optional[float]
     v_inf_arr_mag: t.Optional[float]
+    v_inf_arr_dec: t.Optional[float]
+    v_inf_arr_ra: t.Optional[float]
 
     t_arr: t.Optional[float]
     c3: t.Optional[float]
@@ -226,6 +247,9 @@ class EntryFull(Entry):
     pos_target_entry_y: t.Optional[float]
     pos_target_entry_z: t.Optional[float]
     pos_target_entry_mag: t.Optional[float]
+
+    rot_vel_entry_dec: t.Optional[float]
+    rot_vel_entry_ra: t.Optional[float]
 
     ring_shadow: t.Optional[bool]
     carrier_orbit: t.Optional[str]
