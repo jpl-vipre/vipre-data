@@ -1,7 +1,7 @@
 import typing as t
 
-from pydantic import BaseModel, root_validator, validator
 import numpy as np
+from pydantic import BaseModel, root_validator, validator
 from sqlalchemy.orm import Query
 
 from .utils import Filter, LatLongH

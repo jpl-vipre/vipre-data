@@ -1,7 +1,8 @@
+import os
+from pathlib import Path
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from pathlib import Path
-import os
 
 this_file = Path(__file__).absolute()
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"

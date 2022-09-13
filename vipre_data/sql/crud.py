@@ -1,6 +1,6 @@
 from typing import Optional, Union, Type
 
-from sqlalchemy.orm import Query, Session, defer
+from sqlalchemy.orm import Query, Session
 
 from vipre_data.app import schemas
 from vipre_data.sql import models

@@ -6,9 +6,9 @@ from vipre_data.app import dependencies as deps
 from vipre_data.app import schemas
 from vipre_data.app.schemas.utils import get_xyz_tuple, make_lat_long
 from vipre_data.computations.cart2sph import cart2sph
-from vipre_data.sql import crud, models
-from vipre_data.computations.conic_2point import conic_2point
 from vipre_data.computations.conic_1point import conic_1point
+from vipre_data.computations.conic_2point import conic_2point
+from vipre_data.sql import crud, models
 
 router = APIRouter(
     prefix="/visualizations",

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from vipre_data.app import dependencies as deps
 from vipre_data.app import schemas
-from vipre_data.sql import crud, models
+from vipre_data.sql import crud
 
 router = APIRouter(
     prefix="/bodies",
