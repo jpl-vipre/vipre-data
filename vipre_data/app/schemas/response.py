@@ -1,7 +1,8 @@
 import typing as t
 
-from pydantic import BaseModel, root_validator
+from pydantic import BaseModel, root_validator, validator
 import numpy as np
+from sqlalchemy.orm import Query
 
 from .utils import Filter, LatLongH
 
@@ -33,7 +34,17 @@ def calculate_magnitudes(cls, values: dict) -> dict:
 
 
 class DbModelBase(BaseModel):
+    id: t.Optional[int]
+
     _calculate_magnitudes = root_validator(allow_reuse=True, pre=False)(calculate_magnitudes)
+
+    # This validator will force lazy relationships to be loaded on Model construction
+    #   as suggested in https://github.com/pydantic/pydantic/issues/1334
+    @validator("*", pre=True)
+    def evaluate_lazy_columns(cls, v):
+        if isinstance(v, Query):
+            return v.all()
+        return v
 
     class Config:
         orm_mode = True
@@ -62,7 +73,6 @@ class TrajectoryArcs(BaseModel):
 
 
 class BodySummary(DbModelBase):
-    id: t.Optional[int]
     name: t.Optional[str]
 
 
@@ -80,7 +90,6 @@ class Architecture(DbModelBase):
 
 
 class Maneuver(DbModelBase):
-    id: t.Optional[int]
     entry_id: t.Optional[int]
 
     maneuver_type: t.Optional[str]
@@ -100,7 +109,6 @@ class Maneuver(DbModelBase):
 
 
 class DataRate(DbModelBase):
-    id: t.Optional[int]
     entry_id: t.Optional[int]
     order: t.Optional[int]
     time: t.Optional[int]
@@ -108,7 +116,6 @@ class DataRate(DbModelBase):
 
 
 class Occultation(DbModelBase):
-    id: t.Optional[int]
     trajectory_id: t.Optional[int]
     t_occ_in: t.Optional[int]
     t_occ_out: t.Optional[int]
@@ -135,7 +142,6 @@ class FlyByFull(Flyby):
 
 
 class TrajectorySummary(DbModelBase):
-    id: t.Optional[int]
     body_id: t.Optional[int]
     architecture_id: t.Optional[int]
 
@@ -187,10 +193,6 @@ class TrajectoryFull(Trajectory):
 
 
 class Entry(DbModelBase):
-    id: t.Optional[int]
-
-    target_body: t.Optional[Body]
-
     bvec_theta: t.Optional[float]
     bvec_mag: t.Optional[float]
     safe: t.Optional[bool]
@@ -229,6 +231,7 @@ class Entry(DbModelBase):
 
 
 class EntryFull(Entry):
+    target_body: t.Optional[Body]
     trajectory: t.Optional[TrajectoryFull]
     maneuvers: t.Optional[list[Maneuver]]
     datarates: t.Optional[list[DataRate]]
@@ -253,3 +256,5 @@ class EntryFull(Entry):
 
     ring_shadow: t.Optional[bool]
     carrier_orbit: t.Optional[str]
+
+    mission_delta_v: t.Optional[float]

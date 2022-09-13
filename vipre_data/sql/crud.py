@@ -70,7 +70,7 @@ def count_trajectory_entries(db: Session, trajectory_id: int) -> int:
     return db.query(models.Entry).where(models.Entry.trajectory_id == trajectory_id).count()
 
 
-def get_entry(db: Session, entry_id: int) -> models.Trajectory:
+def get_entry(db: Session, entry_id: int) -> models.Entry:
     return db.query(models.Entry).where(models.Entry.id == entry_id).first()
 
 

@@ -35,7 +35,12 @@ def query_entries(req: schemas.request.EntryRequest, db: Session = Depends(deps.
 @router.get("/{entry_id}", response_model=schemas.response.EntryFull)
 def get_entry(entry_id: int, db: Session = Depends(deps.get_db)):
     result = crud.get_entry(db, entry_id)
-    return result
+    entry = schemas.response.EntryFull.from_orm(result)
+    entry.mission_delta_v = result.trajectory.interplanetary_dv + sum(
+        m.dv_maneuver_mag for m in result.maneuvers
+    )
+    # entry.trajectory = schemas.response.TrajectoryFull.from_orm(result.trajectory)
+    return entry
 
 
 @router.get("/{entry_id}/datarates", response_model=list[schemas.response.DataRate])
