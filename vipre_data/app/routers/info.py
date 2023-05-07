@@ -1,11 +1,13 @@
-from fastapi import APIRouter, Depends
+import os
+
+from fastapi import APIRouter, Depends, Body
 from fastapi import Request
 from sqlalchemy import inspect
 from sqlalchemy.engine import Engine, reflection
 from sqlalchemy.orm import Session
 
 from vipre_data.app import schemas
-from vipre_data.app.dependencies import get_db
+from vipre_data.app.dependencies import get_db, get_engine
 from vipre_data.sql.models import VERSION as DATABASE_VERSION
 
 router = APIRouter(
@@ -79,3 +81,14 @@ def get_table_columns(tablename: str, db: Session = Depends(get_db)) -> list[str
     inspection: reflection.Inspector = inspect(engine)
     columns = inspection.get_columns(tablename)
     return [c["name"] for c in columns]
+
+
+@router.get("/database/connection")
+def get_database_connection(engine: Engine = Depends(get_engine)):
+    return engine.url.render_as_string()
+
+
+@router.post("/database/connection")
+def set_database_connection(uri: str = Body()):
+    os.environ["SQLALCHEMY_DATABASE_URI"] = uri
+    return uri
